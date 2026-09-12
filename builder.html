@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ResumeForge — Resume Builder</title>
+  <meta name="description" content="Build your professional resume with real-time live preview and ATS-friendly templates." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="styles/main.css" />
+  <script>
+    (function () {
+      const saved = localStorage.getItem('rf-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
+</head>
+
+<body>
+
+  <!-- ===========================
+       NAVBAR (BUILDER)
+  ============================ -->
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo" title="Back to Home">
+        <div class="logo-icon">⚡</div>
+        <span>ResumeForge</span>
+      </a>
+
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html" class="nav-link">← Home</a></li>
+        <li><a href="index.html#templates" class="nav-link">Templates</a></li>
+        <li><a href="index.html#how-it-works" class="nav-link">How it works</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button type="button" class="btn btn-soft btn-sm theme-toggle-btn" id="theme-toggle" title="Toggle Theme" aria-label="Toggle Theme">
+          <span class="theme-icon">🌙</span>
+        </button>
+        <button type="button" class="btn btn-primary btn-sm" onclick="window.print()">
+          Export PDF
+        </button>
+      </div>
+
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+
+  <!-- ===========================
+       BUILDER & RESUME FORM (DAY 2)
+  ============================ -->
+  <section class="section builder-section" id="builder" style="padding-top: 100px;">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Day 2 · Interactive Resume Builder</span>
+        <h1 class="section-title" style="font-size: clamp(2rem, 3.5vw, 2.6rem); margin-bottom: 8px;">Enter your details below</h1>
+        <p class="section-subtitle">
+          All sections in one unified workspace — your live resume updates automatically as you type.
+        </p>
+      </div>
+
+      <div class="builder-workspace">
+
+        <!-- LEFT: THE FORM CARD -->
+        <div class="builder-form-card">
+
+          <!-- Topbar with Progress & Reset -->
+          <div class="builder-topbar">
+            <div class="builder-progress-wrap">
+              <div class="builder-progress-info">
+                <span>Resume Strength</span>
+                <span id="progress-text">0% Complete</span>
+              </div>
+              <div class="builder-progress-track">
+                <div class="builder-progress-fill" id="progress-bar" style="width: 0%;"></div>
+              </div>
+            </div>
+            <div class="builder-actions">
+              <button type="button" class="btn btn-soft btn-sm" id="load-sample-btn" title="Populate with realistic sample details">
+                ⚡ Load Sample
+              </button>
+              <button type="button" class="btn btn-outline btn-sm" id="clear-form-btn" title="Reset all fields">
+                Clear
+              </button>
+            </div>
+          </div>
+
+          <!-- Section Tabs (Single Page Experience: No separate pages!) -->
+          <nav class="tab-nav" aria-label="Resume Form Sections">
+            <button type="button" class="tab-btn active" data-tab="personal">👤 Personal Info</button>
+            <button type="button" class="tab-btn" data-tab="summary">📝 Summary</button>
+            <button type="button" class="tab-btn" data-tab="experience">💼 Experience</button>
+            <button type="button" class="tab-btn" data-tab="education">🎓 Education</button>
+            <button type="button" class="tab-btn" data-tab="skills">⚡ Skills</button>
+            <button type="button" class="tab-btn" data-tab="projects">🚀 Projects</button>
+            <button type="button" class="tab-btn" data-tab="certifications">🏆 Certifications</button>
+            <button type="button" class="tab-btn" data-tab="all">📋 All Sections</button>
+          </nav>
+
+          <!-- TAB 1: PERSONAL INFORMATION -->
+          <div class="tab-content active" id="tab-content-personal">
+            <div class="tab-pane-header">
+              <h3 class="tab-pane-title">Personal Information</h3>
+              <p class="tab-pane-desc">Your basic contact details and professional links.</p>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="fullName">Full Name <span class="req">*</span></label>
+                <input type="text" class="form-input" id="fullName" placeholder="Mukesh Ambani" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="jobTitle">Job Title / Headline <span class="req">*</span></label>
+                <input type="text" class="form-input" id="jobTitle" placeholder="Managing Director & Chairman" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="email">Email Address <span class="req">*</span></label>
+                <input type="email" class="form-input" id="email" placeholder="mukesh.ambani@example.com" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="phone">Phone Number</label>
+                <input type="tel" class="form-input" id="phone" placeholder="+91 8103013690" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="location">Location (City, Country / State)</label>
+              <input type="text" class="form-input" id="location" placeholder="Mumbai" />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="linkedIn">LinkedIn Profile</label>
+                <input type="text" class="form-input" id="linkedIn" placeholder="linkedin.com/in/Mukeshambani" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="github">GitHub Profile</label>
+                <input type="text" class="form-input" id="github" placeholder="github.com/mukeshambani" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="portfolio">Portfolio / Website</label>
+              <input type="text" class="form-input" id="portfolio" placeholder="mukeshambani.dev" />
+            </div>
+          </div>
+
+          <!-- TAB 2: ABOUT ME / SUMMARY -->
+          <div class="tab-content" id="tab-content-summary">
+            <div class="tab-pane-header">
+              <h3 class="tab-pane-title">About Me / Summary</h3>
+              <p class="tab-pane-desc">A brief 2-4 sentence summary of your career focus, strengths, and impact.</p>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="summary">Professional Summary</label>
+              <textarea class="form-input form-textarea" id="summary" rows="5" placeholder="Results-driven professional with X years of experience..."></textarea>
+            </div>
+          </div>
+
+          <!-- TAB 3: EXPERIENCE -->
+          <div class="tab-content" id="tab-content-experience">
+            <div class="tab-pane-header" style="display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <h3 class="tab-pane-title">Work Experience</h3>
+                <p class="tab-pane-desc">List your previous roles and key measurable achievements.</p>
+              </div>
+              <button type="button" class="btn btn-soft btn-sm" id="add-experience-btn">+ Add Experience</button>
+            </div>
+            <div class="entries-container" id="experience-entries">
+              <!-- Experience Entry 0 -->
+              <div class="entry-card" id="experience-entry-0">
+                <div class="entry-card-header">
+                  <span class="entry-card-title">💼 Experience #1</span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="exp-title-0">Job Title <span class="req">*</span></label>
+                  <input class="form-input" type="text" id="exp-title-0" placeholder="e.g. Senior Frontend Engineer" />
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="exp-company-0">Company <span class="req">*</span></label>
+                    <input class="form-input" type="text" id="exp-company-0" placeholder="Company Name" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="exp-location-0">Location</label>
+                    <input class="form-input" type="text" id="exp-location-0" placeholder="City, State" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="exp-start-0">Start Date</label>
+                    <input class="form-input" type="text" id="exp-start-0" placeholder="Jan 2022" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="exp-end-0">End Date</label>
+                    <input class="form-input" type="text" id="exp-end-0" placeholder="Present" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="exp-desc-0">Key Responsibilities & Achievements</label>
+                  <textarea class="form-input form-textarea" id="exp-desc-0" rows="3" placeholder="• Spearheaded development of..."></textarea>
+                </div>
+              </div>
+
+              <!-- Experience Entry 1 -->
+              <div class="entry-card" id="experience-entry-1">
+                <div class="entry-card-header">
+                  <span class="entry-card-title">💼 Experience #2</span>
+                  <button type="button" class="entry-remove-btn" data-type="experience" data-index="1" title="Remove">✕</button>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="exp-title-1">Job Title <span class="req">*</span></label>
+                  <input class="form-input" type="text" id="exp-title-1" placeholder="e.g. Software Engineer" />
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="exp-company-1">Company <span class="req">*</span></label>
+                    <input class="form-input" type="text" id="exp-company-1" placeholder="Company Name" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="exp-location-1">Location</label>
+                    <input class="form-input" type="text" id="exp-location-1" placeholder="City, State" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="exp-start-1">Start Date</label>
+                    <input class="form-input" type="text" id="exp-start-1" placeholder="Jun 2020" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="exp-end-1">End Date</label>
+                    <input class="form-input" type="text" id="exp-end-1" placeholder="Dec 2021" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="exp-desc-1">Key Responsibilities & Achievements</label>
+                  <textarea class="form-input form-textarea" id="exp-desc-1" rows="3" placeholder="• Built scalable features..."></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 4: EDUCATION -->
+          <div class="tab-content" id="tab-content-education">
+            <div class="tab-pane-header" style="display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <h3 class="tab-pane-title">Education</h3>
+                <p class="tab-pane-desc">Degrees, colleges, and academic achievements.</p>
+              </div>
+              <button type="button" class="btn btn-soft btn-sm" id="add-education-btn">+ Add Education</button>
+            </div>
+            <div class="entries-container" id="education-entries">
+              <!-- Education Entry 0 -->
+              <div class="entry-card" id="education-entry-0">
+                <div class="entry-card-header">
+                  <span class="entry-card-title">🎓 Education #1</span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="edu-degree-0">Degree / Program <span class="req">*</span></label>
+                  <input class="form-input" type="text" id="edu-degree-0" placeholder="e.g. B.S. in Computer Science" />
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="edu-school-0">School / University <span class="req">*</span></label>
+                    <input class="form-input" type="text" id="edu-school-0" placeholder="University Name" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="edu-year-0">Graduation Year / Duration</label>
+                    <input class="form-input" type="text" id="edu-year-0" placeholder="2016 – 2020" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="edu-desc-0">GPA / Honors / Key Coursework</label>
+                  <input class="form-input" type="text" id="edu-desc-0" placeholder="Magna Cum Laude, GPA 3.85..." />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 5: SKILLS -->
+          <div class="tab-content" id="tab-content-skills">
+            <div class="tab-pane-header">
+              <h3 class="tab-pane-title">Skills</h3>
+              <p class="tab-pane-desc">Technical skills, frameworks, tools, and soft skills.</p>
+            </div>
+            <div class="skills-input-row">
+              <input type="text" class="form-input" id="skill-input" placeholder="Type a skill and press Enter or click Add..." />
+              <button type="button" class="btn btn-primary btn-sm" id="add-skill-btn">Add</button>
+            </div>
+            <div class="skills-tags-wrap" id="skills-tags"></div>
+            <div class="suggested-skills">
+              <div class="suggested-title">Popular Skills (Click to add):</div>
+              <div class="suggested-chips">
+                <button type="button" class="suggested-chip" data-skill="React.js">+ React.js</button>
+                <button type="button" class="suggested-chip" data-skill="TypeScript">+ TypeScript</button>
+                <button type="button" class="suggested-chip" data-skill="Node.js">+ Node.js</button>
+                <button type="button" class="suggested-chip" data-skill="Python">+ Python</button>
+                <button type="button" class="suggested-chip" data-skill="Tailwind CSS">+ Tailwind CSS</button>
+                <button type="button" class="suggested-chip" data-skill="Docker">+ Docker</button>
+                <button type="button" class="suggested-chip" data-skill="Git & GitHub">+ Git & GitHub</button>
+                <button type="button" class="suggested-chip" data-skill="PostgreSQL">+ PostgreSQL</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 6: PROJECTS -->
+          <div class="tab-content" id="tab-content-projects">
+            <div class="tab-pane-header" style="display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <h3 class="tab-pane-title">Projects</h3>
+                <p class="tab-pane-desc">Personal projects, open-source work, and notable apps.</p>
+              </div>
+              <button type="button" class="btn btn-soft btn-sm" id="add-project-btn">+ Add Project</button>
+            </div>
+            <div class="entries-container" id="projects-entries">
+              <!-- Project 0 -->
+              <div class="entry-card" id="projects-entry-0">
+                <div class="entry-card-header">
+                  <span class="entry-card-title">📁 Project #1</span>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="proj-title-0">Project Title <span class="req">*</span></label>
+                    <input class="form-input" type="text" id="proj-title-0" placeholder="e.g. DevPulse" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="proj-role-0">Your Role / Subtitle</label>
+                    <input class="form-input" type="text" id="proj-role-0" placeholder="e.g. Lead Creator" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="proj-link-0">Live Demo URL</label>
+                    <input class="form-input" type="url" id="proj-link-0" placeholder="https://..." />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="proj-github-0">GitHub Repository URL</label>
+                    <input class="form-input" type="url" id="proj-github-0" placeholder="https://github.com/..." />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="proj-tech-0">Technologies Used</label>
+                  <input class="form-input" type="text" id="proj-tech-0" placeholder="React, TypeScript, Chart.js, Supabase" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="proj-desc-0">Project Description & Impact</label>
+                  <textarea class="form-input form-textarea" id="proj-desc-0" rows="2" placeholder="Open-source productivity suite tracking sprint velocity..."></textarea>
+                </div>
+              </div>
+
+              <!-- Project 1 -->
+              <div class="entry-card" id="projects-entry-1">
+                <div class="entry-card-header">
+                  <span class="entry-card-title">📁 Project #2</span>
+                  <button type="button" class="entry-remove-btn" data-type="projects" data-index="1" title="Remove">✕</button>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="proj-title-1">Project Title <span class="req">*</span></label>
+                    <input class="form-input" type="text" id="proj-title-1" placeholder="e.g. AI Prompt Studio" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="proj-role-1">Your Role / Subtitle</label>
+                    <input class="form-input" type="text" id="proj-role-1" placeholder="e.g. Full Stack Developer" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="proj-link-1">Live Demo URL</label>
+                    <input class="form-input" type="url" id="proj-link-1" placeholder="https://..." />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="proj-github-1">GitHub Repository URL</label>
+                    <input class="form-input" type="url" id="proj-github-1" placeholder="https://github.com/..." />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="proj-tech-1">Technologies Used</label>
+                  <input class="form-input" type="text" id="proj-tech-1" placeholder="React, Next.js, OpenAI API, Tailwind CSS" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="proj-desc-1">Project Description & Impact</label>
+                  <textarea class="form-input form-textarea" id="proj-desc-1" rows="2" placeholder="Collaborative prompt workbench for testing, versioning, and deploying LLM prompts..."></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 7: CERTIFICATIONS -->
+          <div class="tab-content" id="tab-content-certifications">
+            <div class="tab-pane-header" style="display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <h3 class="tab-pane-title">Certifications</h3>
+                <p class="tab-pane-desc">Professional licenses, cloud certificates, and accredited badges.</p>
+              </div>
+              <button type="button" class="btn btn-soft btn-sm" id="add-certification-btn">+ Add Certification</button>
+            </div>
+            <div class="entries-container" id="certifications-entries">
+              <!-- Cert 0 -->
+              <div class="entry-card" id="certifications-entry-0">
+                <div class="entry-card-header">
+                  <span class="entry-card-title">🏆 Certification #1</span>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="cert-name-0">Certificate Name <span class="req">*</span></label>
+                    <input class="form-input" type="text" id="cert-name-0" placeholder="e.g. AWS Certified Solutions Architect" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="cert-issuer-0">Issuing Organization <span class="req">*</span></label>
+                    <input class="form-input" type="text" id="cert-issuer-0" placeholder="e.g. Amazon Web Services" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="cert-date-0">Dates (Issue – Expiry)</label>
+                    <input class="form-input" type="text" id="cert-date-0" placeholder="2023 – 2026" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="cert-id-0">Credential ID / URL</label>
+                    <input class="form-input" type="text" id="cert-id-0" placeholder="e.g. AWS-93820194" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab Navigation Controls -->
+          <div class="tab-footer-nav">
+            <button type="button" class="btn btn-soft btn-sm" id="prev-tab-btn" disabled>← Previous Section</button>
+            <button type="button" class="btn btn-primary btn-sm" id="next-tab-btn">Next Section →</button>
+          </div>
+        </div>
+
+
+        <!-- RIGHT: LIVE RESUME PREVIEW PANEL -->
+        <div class="builder-preview-card" id="resume-preview-panel">
+          <div class="preview-topbar">
+            <!-- Template Selector Option with Label -->
+            <div class="preview-template-selection" style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:0.78rem; font-weight:600; color:#94a3b8; text-transform:uppercase; letter-spacing:0.04em;">Template:</span>
+              <div class="preview-template-tabs">
+                <button type="button" class="template-tab-btn active" data-template="modern" title="Modern Sidebar Layout">Modern</button>
+                <button type="button" class="template-tab-btn" data-template="minimal" title="Clean Minimal Layout">Minimal</button>
+                <button type="button" class="template-tab-btn" data-template="creative" title="Creative Accent Layout">Creative</button>
+              </div>
+            </div>
+
+            <div class="preview-zoom-actions">
+              <button type="button" class="btn btn-soft btn-sm" id="fullscreen-btn" title="Enlarge Screen (Hide Navigation)">
+                <span id="fullscreen-icon">⛶</span> <span id="fullscreen-text">Full Screen</span>
+              </button>
+              <button type="button" class="zoom-btn" id="zoom-out-btn" title="Zoom Out">−</button>
+              <span class="zoom-level-text" id="zoom-level">100%</span>
+              <button type="button" class="zoom-btn" id="zoom-in-btn" title="Zoom In">+</button>
+              <button type="button" class="btn btn-primary btn-sm" id="download-btn" style="margin-left: 6px;">
+                Download PDF
+              </button>
+            </div>
+          </div>
+
+          <div class="preview-canvas-wrap">
+            <div class="resume-sheet" id="resume-sheet">
+
+              <!-- 1. MODERN TEMPLATE -->
+              <div class="live-template live-tpl-modern active" id="tpl-modern">
+                <div class="live-m-side">
+                  <div class="live-m-avatar" id="tpl-m-avatar">M</div>
+                  <div class="live-m-side-sec">
+                    <div class="live-m-side-title">Contact</div>
+                    <div class="live-m-contact-item" id="tpl-m-email">mukesh.ambani@example.com</div>
+                    <div class="live-m-contact-item" id="tpl-m-phone">+91 8103013690</div>
+                    <div class="live-m-contact-item" id="tpl-m-location">Mumbai</div>
+                    <div class="live-m-contact-item" id="tpl-m-linkedin"></div>
+                    <div class="live-m-contact-item" id="tpl-m-github"></div>
+                    <div class="live-m-contact-item" id="tpl-m-portfolio"></div>
+                  </div>
+                  <div class="live-m-side-sec">
+                    <div class="live-m-side-title">Skills</div>
+                    <div class="live-m-skills-wrap" id="tpl-m-skills"></div>
+                  </div>
+                  <div class="live-m-side-sec">
+                    <div class="live-m-side-title">Certifications</div>
+                    <div id="tpl-m-cert-entries"></div>
+                  </div>
+                </div>
+
+                <div class="live-m-body">
+                  <div class="live-m-header">
+                    <h2 class="live-m-name" id="tpl-m-name">Mukesh Ambani</h2>
+                    <div class="live-m-title" id="tpl-m-title">Managing Director & Chairman</div>
+                  </div>
+                  <div class="live-m-section">
+                    <h4 class="live-m-section-title">Summary</h4>
+                    <p class="live-m-text" id="tpl-m-summary">Career summary here.</p>
+                  </div>
+                  <div class="live-m-section">
+                    <h4 class="live-m-section-title">Experience</h4>
+                    <div id="tpl-m-exp-entries"></div>
+                  </div>
+                  <div class="live-m-section">
+                    <h4 class="live-m-section-title">Education</h4>
+                    <div id="tpl-m-edu-entries"></div>
+                  </div>
+                  <div class="live-m-section">
+                    <h4 class="live-m-section-title">Projects</h4>
+                    <div id="tpl-m-proj-entries"></div>
+                  </div>
+                  <div class="live-m-section" id="tpl-m-cert-section-body">
+                    <h4 class="live-m-section-title">Certifications</h4>
+                    <div id="tpl-m-cert-body-entries"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 2. MINIMAL TEMPLATE (Clean ATS / Elegant Monochrome) -->
+              <div class="live-template live-tpl-minimal" id="tpl-minimal">
+                <div class="live-mn-header">
+                  <h2 class="live-mn-name" id="tpl-mn-name">Mukesh Ambani</h2>
+                  <div class="live-mn-title" id="tpl-mn-title">Managing Director & Chairman</div>
+                  <div class="live-mn-contacts" id="tpl-mn-contacts"></div>
+                </div>
+                <div class="live-mn-section" id="tpl-mn-summary-sec">
+                  <h4 class="live-mn-heading">Summary</h4>
+                  <div class="live-mn-divider"></div>
+                  <p class="live-mn-text" id="tpl-mn-summary"></p>
+                </div>
+                <div class="live-mn-section" id="tpl-mn-exp-sec">
+                  <h4 class="live-mn-heading">Experience</h4>
+                  <div class="live-mn-divider"></div>
+                  <div id="tpl-mn-exp-entries"></div>
+                </div>
+                <div class="live-mn-section" id="tpl-mn-edu-sec">
+                  <h4 class="live-mn-heading">Education</h4>
+                  <div class="live-mn-divider"></div>
+                  <div id="tpl-mn-edu-entries"></div>
+                </div>
+                <div class="live-mn-section" id="tpl-mn-skills-sec">
+                  <h4 class="live-mn-heading">Skills</h4>
+                  <div class="live-mn-divider"></div>
+                  <p class="live-mn-text" id="tpl-mn-skills"></p>
+                </div>
+                <div class="live-mn-section" id="tpl-mn-proj-sec">
+                  <h4 class="live-mn-heading">Projects</h4>
+                  <div class="live-mn-divider"></div>
+                  <div id="tpl-mn-proj-entries"></div>
+                </div>
+                <div class="live-mn-section" id="tpl-mn-cert-sec">
+                  <h4 class="live-mn-heading">Certifications</h4>
+                  <div class="live-mn-divider"></div>
+                  <div id="tpl-mn-cert-entries"></div>
+                </div>
+              </div>
+
+              <!-- 3. CREATIVE TEMPLATE (Vibrant Accent / Modern 2-Column Grid) -->
+              <div class="live-template live-tpl-creative" id="tpl-creative">
+                <div class="live-cr-bar"></div>
+                <div class="live-cr-inner">
+                  <div class="live-cr-header">
+                    <div class="live-cr-header-left">
+                      <h2 class="live-cr-name" id="tpl-cr-name">Mukesh Ambani</h2>
+                      <div class="live-cr-title" id="tpl-cr-title">Managing Director & Chairman</div>
+                    </div>
+                    <div class="live-cr-contacts" id="tpl-cr-contacts"></div>
+                  </div>
+
+                  <div class="live-cr-summary-card" id="tpl-cr-summary-card">
+                    <p class="live-cr-summary-text" id="tpl-cr-summary"></p>
+                  </div>
+
+                  <div class="live-cr-grid">
+                    <div class="live-cr-col-main">
+                      <div class="live-cr-section" id="tpl-cr-exp-sec">
+                        <h4 class="live-cr-section-title" style="color:#0284c7;">💼 Work Experience</h4>
+                        <div id="tpl-cr-exp-entries"></div>
+                      </div>
+                      <div class="live-cr-section" id="tpl-cr-proj-sec">
+                        <h4 class="live-cr-section-title" style="color:#0284c7;">🚀 Featured Projects</h4>
+                        <div id="tpl-cr-proj-entries"></div>
+                      </div>
+                    </div>
+
+                    <div class="live-cr-col-side">
+                      <div class="live-cr-section" id="tpl-cr-skills-sec">
+                        <h4 class="live-cr-section-title" style="color:#db2777;">⚡ Core Skills</h4>
+                        <div class="live-cr-skills-wrap" id="tpl-cr-skills"></div>
+                      </div>
+                      <div class="live-cr-section" id="tpl-cr-edu-sec">
+                        <h4 class="live-cr-section-title" style="color:#7c3aed;">🎓 Education</h4>
+                        <div id="tpl-cr-edu-entries"></div>
+                      </div>
+                      <div class="live-cr-section" id="tpl-cr-cert-sec">
+                        <h4 class="live-cr-section-title" style="color:#d97706;">🏆 Certifications</h4>
+                        <div id="tpl-cr-cert-entries"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===========================
+       FOOTER
+  ============================ -->
+  <footer class="footer" id="footer">
+    <div class="container footer-inner">
+      <div class="footer-logo">
+        <div class="logo-icon" style="width:28px;height:28px;font-size:0.9rem;">⚡</div>
+        <span>ResumeForge</span>
+      </div>
+      <p class="footer-copy">© 2026 ResumeForge &nbsp;·&nbsp; Built with ❤️ &nbsp;·&nbsp; Day 2 of 10</p>
+      <div class="footer-links">
+        <a href="index.html" class="footer-link">Home</a>
+        <a href="index.html#templates" class="footer-link">Templates</a>
+        <a href="index.html#how-it-works" class="footer-link">How it works</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- App Script for Day 2 Resume Builder -->
+  <script src="js/app.js"></script>
+
+</body>
+
+</html>

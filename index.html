@@ -1,15 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ResumeForge — Build Your Dream Resume</title>
-  <meta name="description" content="ResumeForge helps you create beautiful, professional resumes and CVs in minutes. Choose from stunning templates, customize every detail, and download instantly." />
+  <meta name="description"
+    content="ResumeForge helps you create beautiful, professional resumes and CVs in minutes. Choose from stunning templates, customize every detail, and download instantly." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="styles/main.css" />
+  <script>
+    (function () {
+      const saved = localStorage.getItem('rf-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
 </head>
+
 <body>
 
   <!-- ===========================
@@ -23,14 +34,18 @@
       </a>
 
       <ul class="nav-links" id="nav-links">
+        <li><a href="builder.html" class="nav-link">Builder</a></li>
         <li><a href="#how-it-works" class="nav-link">How it works</a></li>
         <li><a href="#templates" class="nav-link">Templates</a></li>
         <li><a href="#features" class="nav-link">Features</a></li>
       </ul>
 
       <div class="nav-actions">
-        <a href="#" class="btn btn-soft btn-sm">Log in</a>
-        <a href="#" class="btn btn-primary btn-sm">Get Started</a>
+        <button type="button" class="btn btn-soft btn-sm theme-toggle-btn" id="theme-toggle" title="Toggle Theme" aria-label="Toggle Theme">
+          <span class="theme-icon">🌙</span>
+        </button>
+        <a href="builder.html" class="btn btn-soft btn-sm">Log in</a>
+        <a href="builder.html" class="btn btn-primary btn-sm">Get Started</a>
       </div>
 
       <button class="hamburger" id="hamburger" aria-label="Menu">
@@ -71,9 +86,11 @@
         </p>
 
         <div class="hero-cta">
-          <a href="#" class="btn btn-primary btn-large">
+          <a href="builder.html" class="btn btn-primary btn-large">
             Create My Resume
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
           </a>
           <a href="#templates" class="btn btn-soft btn-large">Browse Templates</a>
         </div>
@@ -217,60 +234,15 @@
 
       <div class="templates-grid">
 
-        <!-- Modern -->
-        <div class="template-card featured" id="tpl-card-modern">
-          <div class="template-preview tp-modern" style="position:relative">
-            <div class="template-badge">Popular</div>
-            <div class="tp-m-inner">
-              <div class="tp-m-side">
-                <div class="tp-m-av"></div>
-                <div class="tp-m-line tp-m-line-lg"></div>
-                <div class="tp-m-line tp-m-line-md"></div>
-                <div style="height:4px;background:rgba(255,255,255,0.15);border-radius:2px;margin:6px 0 2px;font-size:4px;"></div>
-                <div class="tp-m-line tp-m-line-lg"></div>
-                <div class="tp-m-line tp-m-line-md"></div>
-                <div class="tp-m-line tp-m-line-md"></div>
-                <div style="height:4px;background:rgba(255,255,255,0.15);border-radius:2px;margin:6px 0 2px;"></div>
-                <div class="tp-m-line" style="width:75%;height:6px;background:rgba(167,139,250,0.3);border-radius:3px;margin:2px 0;"></div>
-                <div class="tp-m-line" style="width:55%;height:6px;background:rgba(167,139,250,0.3);border-radius:3px;margin:2px 0;"></div>
-                <div class="tp-m-line" style="width:70%;height:6px;background:rgba(167,139,250,0.3);border-radius:3px;margin:2px 0;"></div>
-              </div>
-              <div class="tp-m-body">
-                <div class="tp-m-sec"></div>
-                <div class="tp-m-bold"></div>
-                <div class="tp-m-d tp-m-d-md"></div>
-                <div class="tp-m-d tp-m-d-lg"></div>
-                <div class="tp-m-d tp-m-d-lg"></div>
-                <div class="tp-m-sec"></div>
-                <div class="tp-m-bold"></div>
-                <div class="tp-m-d tp-m-d-md"></div>
-                <div class="tp-m-d tp-m-d-lg"></div>
-                <div class="tp-m-sec"></div>
-                <div class="tp-m-bold"></div>
-                <div class="tp-m-d tp-m-d-md"></div>
-              </div>
-            </div>
-          </div>
-          <div class="template-info">
-            <h3 class="template-name">Modern</h3>
-            <p class="template-desc">Sidebar layout · Bold &amp; professional</p>
-            <div class="template-palette">
-              <div class="palette-dots">
-                <span class="pdot" style="background:#1e1b4b"></span>
-                <span class="pdot" style="background:#a78bfa"></span>
-                <span class="pdot" style="background:#f5f3ff"></span>
-              </div>
-              <a href="#" class="btn btn-outline btn-sm">Use Template</a>
-            </div>
-          </div>
-        </div>
-
         <!-- Minimal -->
-        <div class="template-card" id="tpl-card-minimal">
+        <div class="template-card featured" id="tpl-card-minimal">
           <div class="template-preview tp-minimal">
+            <div class="template-badge">Popular</div>
             <div class="tp-mn-inner">
               <div class="tp-mn-name"></div>
-              <div style="margin-top:4px;"><div class="tp-mn-title"></div></div>
+              <div style="margin-top:4px;">
+                <div class="tp-mn-title"></div>
+              </div>
               <div class="tp-mn-div"></div>
               <div class="tp-mn-row">
                 <div class="tp-mn-col">
@@ -301,11 +273,63 @@
             <p class="template-desc">Clean &amp; ATS-friendly classic</p>
             <div class="template-palette">
               <div class="palette-dots">
-                <span class="pdot" style="background:#1f2937"></span>
-                <span class="pdot" style="background:#9ca3af"></span>
+                <span class="pdot" style="background:#0f172a"></span>
+                <span class="pdot" style="background:#94a3b8"></span>
                 <span class="pdot" style="background:#f8fafc"></span>
               </div>
-              <a href="#" class="btn btn-outline btn-sm">Use Template</a>
+              <a href="builder.html?template=minimal" class="btn btn-outline btn-sm">View Template</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modern -->
+        <div class="template-card" id="tpl-card-modern">
+          <div class="template-preview tp-modern" style="position:relative">
+            <div class="tp-m-inner">
+              <div class="tp-m-side">
+                <div class="tp-m-av"></div>
+                <div class="tp-m-line tp-m-line-lg"></div>
+                <div class="tp-m-line tp-m-line-md"></div>
+                <div
+                  style="height:4px;background:rgba(255,255,255,0.15);border-radius:2px;margin:6px 0 2px;font-size:4px;">
+                </div>
+                <div class="tp-m-line tp-m-line-lg"></div>
+                <div class="tp-m-line tp-m-line-md"></div>
+                <div class="tp-m-line tp-m-line-md"></div>
+                <div style="height:4px;background:rgba(255,255,255,0.15);border-radius:2px;margin:6px 0 2px;"></div>
+                <div class="tp-m-line"
+                  style="width:75%;height:6px;background:rgba(94,234,212,0.35);border-radius:3px;margin:2px 0;"></div>
+                <div class="tp-m-line"
+                  style="width:55%;height:6px;background:rgba(94,234,212,0.35);border-radius:3px;margin:2px 0;"></div>
+                <div class="tp-m-line"
+                  style="width:70%;height:6px;background:rgba(94,234,212,0.35);border-radius:3px;margin:2px 0;"></div>
+              </div>
+              <div class="tp-m-body">
+                <div class="tp-m-sec"></div>
+                <div class="tp-m-bold"></div>
+                <div class="tp-m-d tp-m-d-md"></div>
+                <div class="tp-m-d tp-m-d-lg"></div>
+                <div class="tp-m-d tp-m-d-lg"></div>
+                <div class="tp-m-sec"></div>
+                <div class="tp-m-bold"></div>
+                <div class="tp-m-d tp-m-d-md"></div>
+                <div class="tp-m-d tp-m-d-lg"></div>
+                <div class="tp-m-sec"></div>
+                <div class="tp-m-bold"></div>
+                <div class="tp-m-d tp-m-d-md"></div>
+              </div>
+            </div>
+          </div>
+          <div class="template-info">
+            <h3 class="template-name">Modern</h3>
+            <p class="template-desc">Sidebar layout · Bold &amp; professional</p>
+            <div class="template-palette">
+              <div class="palette-dots">
+                <span class="pdot" style="background:#134e4a"></span>
+                <span class="pdot" style="background:#2dd4bf"></span>
+                <span class="pdot" style="background:#e6f7f5"></span>
+              </div>
+              <a href="builder.html?template=modern" class="btn btn-outline btn-sm">View Template</a>
             </div>
           </div>
         </div>
@@ -321,9 +345,9 @@
                   <div class="tp-cr-name"></div>
                   <div class="tp-cr-rol"></div>
                   <div style="height:8px;"></div>
-                  <div class="tp-cr-line" style="width:90%;height:5px;background:#f3e8ff;border-radius:2px;"></div>
-                  <div class="tp-cr-line" style="width:70%;height:5px;background:#f3e8ff;border-radius:2px;"></div>
-                  <div class="tp-cr-line" style="width:80%;height:5px;background:#f3e8ff;border-radius:2px;"></div>
+                  <div class="tp-cr-line" style="width:90%;height:5px;background:#f0f9ff;border-radius:2px;"></div>
+                  <div class="tp-cr-line" style="width:70%;height:5px;background:#f0f9ff;border-radius:2px;"></div>
+                  <div class="tp-cr-line" style="width:80%;height:5px;background:#f0f9ff;border-radius:2px;"></div>
                 </div>
                 <div class="tp-cr-main">
                   <div class="tp-cr-sec"></div>
@@ -345,11 +369,11 @@
             <p class="template-desc">Stand out with a bold accent header</p>
             <div class="template-palette">
               <div class="palette-dots">
-                <span class="pdot" style="background:#7c3aed"></span>
-                <span class="pdot" style="background:#f9a8d4"></span>
-                <span class="pdot" style="background:#fdf4ff"></span>
+                <span class="pdot" style="background:#0284c7"></span>
+                <span class="pdot" style="background:#f472b6"></span>
+                <span class="pdot" style="background:#fff7ed"></span>
               </div>
-              <a href="#" class="btn btn-outline btn-sm">Use Template</a>
+              <a href="builder.html?template=creative" class="btn btn-outline btn-sm">View Template</a>
             </div>
           </div>
         </div>
@@ -371,40 +395,46 @@
 
       <div class="features-grid">
 
-        <div class="feature-card fc-violet">
-          <div class="feature-icon-wrap fi-violet">⚡</div>
+        <div class="feature-card fc-mint">
+          <div class="feature-icon-wrap fi-mint">⚡</div>
           <h3 class="feature-title">Live Preview</h3>
-          <p class="feature-desc">Watch your resume update in real-time as you type. No guessing — what you see is exactly what you'll get.</p>
+          <p class="feature-desc">Watch your resume update in real-time as you type. No guessing — what you see is
+            exactly what you'll get.</p>
         </div>
 
-        <div class="feature-card fc-rose">
-          <div class="feature-icon-wrap fi-rose">🎨</div>
+        <div class="feature-card fc-coral">
+          <div class="feature-icon-wrap fi-coral">🎨</div>
           <h3 class="feature-title">Premium Templates</h3>
-          <p class="feature-desc">Choose from beautifully crafted layouts designed by professionals. Suitable for all industries and career levels.</p>
+          <p class="feature-desc">Choose from beautifully crafted layouts designed by professionals. Suitable for all
+            industries and career levels.</p>
         </div>
 
         <div class="feature-card fc-sky">
           <div class="feature-icon-wrap fi-sky">📄</div>
           <h3 class="feature-title">One-Click PDF Export</h3>
-          <p class="feature-desc">Download a high-quality, print-ready PDF instantly. Perfectly formatted and ready to send to any employer.</p>
+          <p class="feature-desc">Download a high-quality, print-ready PDF instantly. Perfectly formatted and ready to
+            send to any employer.</p>
         </div>
 
         <div class="feature-card fc-green">
           <div class="feature-icon-wrap fi-green">🤖</div>
           <h3 class="feature-title">ATS Optimised</h3>
-          <p class="feature-desc">All templates are structured to pass Applicant Tracking Systems, giving your resume a better chance of being seen.</p>
+          <p class="feature-desc">All templates are structured to pass Applicant Tracking Systems, giving your resume a
+            better chance of being seen.</p>
         </div>
 
         <div class="feature-card fc-peach">
           <div class="feature-icon-wrap fi-peach">🆓</div>
           <h3 class="feature-title">Completely Free</h3>
-          <p class="feature-desc">No subscriptions, no watermarks, no credit card needed. ResumeForge is free to use — forever.</p>
+          <p class="feature-desc">No subscriptions, no watermarks, no credit card needed. ResumeForge is free to use —
+            forever.</p>
         </div>
 
-        <div class="feature-card fc-pink">
-          <div class="feature-icon-wrap fi-pink">🔒</div>
+        <div class="feature-card fc-rose">
+          <div class="feature-icon-wrap fi-rose">🔒</div>
           <h3 class="feature-title">Your Data, Private</h3>
-          <p class="feature-desc">Everything stays in your browser. We never store, sell, or access your personal information. No account required.</p>
+          <p class="feature-desc">Everything stays in your browser. We never store, sell, or access your personal
+            information. No account required.</p>
         </div>
 
       </div>
@@ -425,9 +455,11 @@
             Join thousands of job seekers who built their resume with ResumeForge — for free.
           </p>
           <div class="cta-buttons">
-            <a href="#" class="btn btn-primary btn-large">
+            <a href="builder.html" class="btn btn-primary btn-large">
               Build My Resume Free
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
             </a>
             <a href="#templates" class="btn btn-soft btn-large">See Templates</a>
           </div>
@@ -446,8 +478,9 @@
         <div class="logo-icon" style="width:28px;height:28px;font-size:0.9rem;">⚡</div>
         <span>ResumeForge</span>
       </div>
-      <p class="footer-copy">© 2026 ResumeForge &nbsp;·&nbsp; Built with ❤️ &nbsp;·&nbsp; Day 1 of 10</p>
+      <p class="footer-copy">© 2026 ResumeForge &nbsp;·&nbsp; Built with ❤️ &nbsp;·&nbsp; Day 2 of 10</p>
       <div class="footer-links">
+        <a href="builder.html" class="footer-link">Resume Builder</a>
         <a href="#how-it-works" class="footer-link">How it works</a>
         <a href="#templates" class="footer-link">Templates</a>
         <a href="#features" class="footer-link">Features</a>
@@ -455,19 +488,9 @@
     </div>
   </footer>
 
-  <!-- Minimal JS: only for navbar scroll class + hamburger menu -->
-  <script>
-    // Navbar scroll effect
-    const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-      navbar.classList.toggle('scrolled', window.scrollY > 40);
-    }, { passive: true });
-
-    // Hamburger menu toggle (mobile)
-    document.getElementById('hamburger').addEventListener('click', () => {
-      document.getElementById('nav-links').classList.toggle('open');
-    });
-  </script>
+  <!-- App Script for Day 2 Resume Builder -->
+  <script src="js/app.js"></script>
 
 </body>
+
 </html>
