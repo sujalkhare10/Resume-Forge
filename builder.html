@@ -67,7 +67,17 @@
         </p>
       </div>
 
-      <div class="builder-workspace">
+      <!-- Mobile View Switcher (Visible only on mobile/tablet < 1024px) -->
+      <div class="mobile-view-switcher" id="mobile-view-switcher">
+        <button type="button" class="view-switch-btn active" id="switch-to-form-btn">
+          <span>✏️</span> Edit Details
+        </button>
+        <button type="button" class="view-switch-btn" id="switch-to-preview-btn">
+          <span>👁️</span> Live Preview
+        </button>
+      </div>
+
+      <div class="builder-workspace show-form" id="builder-workspace">
 
         <!-- LEFT: THE FORM CARD -->
         <div class="builder-form-card">
@@ -778,8 +788,14 @@
     </div>
   </footer>
 
+  <!-- Floating Mobile Quick Toggle Button -->
+  <button type="button" class="floating-preview-btn" id="floating-preview-btn" title="Toggle between form and preview">
+    <span id="floating-preview-icon">👁️</span>
+    <span id="floating-preview-text">Preview Resume</span>
+  </button>
+
   <!-- App Script for Day 2 Resume Builder -->
-  <script src="js/app.js"></script>
+  <script type="module" src="/js/app.js"></script>
 
 </body>
 

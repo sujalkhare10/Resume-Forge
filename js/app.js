@@ -124,6 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initDownload();
   initSampleDataHandlers();
   initFullscreen();
+  initMobileViewSwitcher();
 
   // Populate sample data & form only on builder page
   if (document.getElementById('fullName')) {
@@ -157,12 +158,65 @@ function initNavbar() {
     { passive: true }
   );
 
-  hamburger?.addEventListener('click', () => {
-    navLinks?.classList.toggle('open');
+  hamburger?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = navLinks?.classList.toggle('open');
+    hamburger?.classList.toggle('active', Boolean(isOpen));
   });
 
-  navLinks?.querySelectorAll('.nav-link').forEach((link) => {
-    link.addEventListener('click', () => navLinks.classList.remove('open'));
+  navLinks?.querySelectorAll('.nav-link, a').forEach((link) => {
+    link.addEventListener('click', () => {
+      navLinks.classList.remove('open');
+      hamburger?.classList.remove('active');
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    if (navLinks?.classList.contains('open') && !navLinks.contains(e.target) && !hamburger?.contains(e.target)) {
+      navLinks.classList.remove('open');
+      hamburger?.classList.remove('active');
+    }
+  });
+}
+
+// =============================================
+//  MOBILE VIEW SWITCHER (FORM VS PREVIEW)
+// =============================================
+function initMobileViewSwitcher() {
+  const workspace = document.getElementById('builder-workspace');
+  const toFormBtn = document.getElementById('switch-to-form-btn');
+  const toPreviewBtn = document.getElementById('switch-to-preview-btn');
+  const floatingBtn = document.getElementById('floating-preview-btn');
+  const floatingText = document.getElementById('floating-preview-text');
+  const floatingIcon = document.getElementById('floating-preview-icon');
+
+  if (!workspace) return;
+
+  function showMode(mode) {
+    if (mode === 'preview') {
+      workspace.classList.remove('show-form');
+      workspace.classList.add('show-preview');
+      toFormBtn?.classList.remove('active');
+      toPreviewBtn?.classList.add('active');
+      if (floatingText) floatingText.textContent = 'Edit Form';
+      if (floatingIcon) floatingIcon.textContent = '✏️';
+      window.scrollTo({ top: 90, behavior: 'smooth' });
+    } else {
+      workspace.classList.remove('show-preview');
+      workspace.classList.add('show-form');
+      toPreviewBtn?.classList.remove('active');
+      toFormBtn?.classList.add('active');
+      if (floatingText) floatingText.textContent = 'Preview Resume';
+      if (floatingIcon) floatingIcon.textContent = '👁️';
+      window.scrollTo({ top: 90, behavior: 'smooth' });
+    }
+  }
+
+  toFormBtn?.addEventListener('click', () => showMode('form'));
+  toPreviewBtn?.addEventListener('click', () => showMode('preview'));
+  floatingBtn?.addEventListener('click', () => {
+    const isShowingPreview = workspace.classList.contains('show-preview');
+    showMode(isShowingPreview ? 'form' : 'preview');
   });
 }
 
@@ -1323,12 +1377,35 @@ function removeEntryCard(type, idx) {
 }
 
 // =============================================
-//  ZOOM CONTROLS
+//  ZOOM CONTROLS (RESPONSIVE AUTO-FIT)
 // =============================================
+function getOptimalZoom() {
+  if (window.innerWidth <= 480) {
+    const available = window.innerWidth - 32;
+    return Math.min(Math.max(parseFloat((available / 615).toFixed(2)), 0.42), 0.72);
+  } else if (window.innerWidth <= 768) {
+    const available = window.innerWidth - 48;
+    return Math.min(Math.max(parseFloat((available / 615).toFixed(2)), 0.65), 0.95);
+  }
+  return 1.0;
+}
+
 function initZoomControls() {
   document.getElementById('zoom-in-btn')?.addEventListener('click', () => setZoom(state.zoom + 0.1));
   document.getElementById('zoom-out-btn')?.addEventListener('click', () => setZoom(state.zoom - 0.1));
-  document.getElementById('zoom-level')?.addEventListener('click', () => setZoom(1.0));
+  document.getElementById('zoom-level')?.addEventListener('click', () => setZoom(getOptimalZoom()));
+
+  // Auto-fit default zoom on mobile / tablet
+  if (window.innerWidth <= 768) {
+    setZoom(getOptimalZoom());
+  }
+
+  // Handle window resizing or orientation change
+  window.addEventListener('resize', () => {
+    if (window.innerWidth <= 768 && (state.zoom === 1.0 || state.zoom === 0.5)) {
+      setZoom(getOptimalZoom());
+    }
+  });
 }
 
 function setZoom(level) {
