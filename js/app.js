@@ -253,23 +253,31 @@ function switchTab(tabName) {
 //  FORM LISTENERS → LIVE PREVIEW
 // =============================================
 function initFormListeners() {
+  const formCard = document.querySelector('.builder-form-card') || document.body;
+  if (formCard && !formCard._hasLiveListeners) {
+    formCard._hasLiveListeners = true;
+    formCard.addEventListener('input', () => {
+      updatePreview();
+      updateProgress();
+    });
+    formCard.addEventListener('change', () => {
+      updatePreview();
+      updateProgress();
+    });
+  }
+
+  // Also bind directly to all inputs/textareas to guarantee instant response
   document.querySelectorAll('.form-input').forEach((input) => {
-    input.removeEventListener('input', onInputDebounced);
-    input.addEventListener('input', onInputDebounced);
+    input.removeEventListener('input', onLiveInput);
+    input.addEventListener('input', onLiveInput);
+    input.removeEventListener('change', onLiveInput);
+    input.addEventListener('change', onLiveInput);
   });
 }
 
-const onInputDebounced = debounce(() => {
+function onLiveInput() {
   updatePreview();
   updateProgress();
-}, 100);
-
-function debounce(fn, delay) {
-  let timer;
-  return (...args) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => fn(...args), delay);
-  };
 }
 
 // =============================================
@@ -310,9 +318,21 @@ function updateProgress() {
 //  LIVE PREVIEW UPDATE
 // =============================================
 function updatePreview() {
-  updateModernTemplate();
-  updateMinimalTemplate();
-  updateCreativeTemplate();
+  const dist = distributeResumeContent();
+  updateModernTemplate(dist);
+  updateMinimalTemplate(dist);
+  updateCreativeTemplate(dist);
+
+  const pageBadge = document.getElementById('page-count-badge');
+  if (pageBadge) {
+    if (dist.isTwoPages) {
+      pageBadge.textContent = '📄 2 Pages (A4)';
+      pageBadge.classList.add('two-pages');
+    } else {
+      pageBadge.textContent = '📄 1 Page (A4)';
+      pageBadge.classList.remove('two-pages');
+    }
+  }
 }
 
 function val(id) {
@@ -325,26 +345,28 @@ function getExperienceData() {
   const cards = document.querySelectorAll('#experience-entries .entry-card');
   const list = [];
   if (cards.length > 0) {
-    cards.forEach((card, idx) => {
-      list.push({
-        title: card.querySelector('input[id^="exp-title-"]')?.value.trim() || `Position #${idx + 1}`,
-        company: card.querySelector('input[id^="exp-company-"]')?.value.trim() || 'Company',
-        location: card.querySelector('input[id^="exp-location-"]')?.value.trim() || '',
-        start: card.querySelector('input[id^="exp-start-"]')?.value.trim() || 'Start',
-        end: card.querySelector('input[id^="exp-end-"]')?.value.trim() || 'Present',
-        desc: card.querySelector('textarea[id^="exp-desc-"]')?.value.trim() || '',
-      });
+    cards.forEach((card) => {
+      const title = card.querySelector('input[id^="exp-title-"]')?.value.trim() || '';
+      const company = card.querySelector('input[id^="exp-company-"]')?.value.trim() || '';
+      const location = card.querySelector('input[id^="exp-location-"]')?.value.trim() || '';
+      const start = card.querySelector('input[id^="exp-start-"]')?.value.trim() || '';
+      const end = card.querySelector('input[id^="exp-end-"]')?.value.trim() || '';
+      const desc = card.querySelector('textarea[id^="exp-desc-"]')?.value.trim() || '';
+      if (title || company || location || start || end || desc) {
+        list.push({ title, company, location, start, end, desc });
+      }
     });
   } else {
     for (let i = 0; i < state.experienceCount; i++) {
-      list.push({
-        title: val(`exp-title-${i}`) || 'Job Title',
-        company: val(`exp-company-${i}`) || 'Company',
-        location: val(`exp-location-${i}`) || '',
-        start: val(`exp-start-${i}`) || 'Start',
-        end: val(`exp-end-${i}`) || 'Present',
-        desc: val(`exp-desc-${i}`) || '',
-      });
+      const title = val(`exp-title-${i}`);
+      const company = val(`exp-company-${i}`);
+      const location = val(`exp-location-${i}`);
+      const start = val(`exp-start-${i}`);
+      const end = val(`exp-end-${i}`);
+      const desc = val(`exp-desc-${i}`);
+      if (title || company || location || start || end || desc) {
+        list.push({ title, company, location, start, end, desc });
+      }
     }
   }
   return list;
@@ -354,22 +376,24 @@ function getEducationData() {
   const cards = document.querySelectorAll('#education-entries .entry-card');
   const list = [];
   if (cards.length > 0) {
-    cards.forEach((card, idx) => {
-      list.push({
-        degree: card.querySelector('input[id^="edu-degree-"]')?.value.trim() || `Degree #${idx + 1}`,
-        school: card.querySelector('input[id^="edu-school-"]')?.value.trim() || 'University',
-        year: card.querySelector('input[id^="edu-year-"]')?.value.trim() || '',
-        desc: card.querySelector('input[id^="edu-desc-"]')?.value.trim() || '',
-      });
+    cards.forEach((card) => {
+      const degree = card.querySelector('input[id^="edu-degree-"]')?.value.trim() || '';
+      const school = card.querySelector('input[id^="edu-school-"]')?.value.trim() || '';
+      const year = card.querySelector('input[id^="edu-year-"]')?.value.trim() || '';
+      const desc = card.querySelector('input[id^="edu-desc-"]')?.value.trim() || '';
+      if (degree || school || year || desc) {
+        list.push({ degree, school, year, desc });
+      }
     });
   } else {
     for (let i = 0; i < state.educationCount; i++) {
-      list.push({
-        degree: val(`edu-degree-${i}`) || 'Degree',
-        school: val(`edu-school-${i}`) || 'University',
-        year: val(`edu-year-${i}`) || '',
-        desc: val(`edu-desc-${i}`) || '',
-      });
+      const degree = val(`edu-degree-${i}`);
+      const school = val(`edu-school-${i}`);
+      const year = val(`edu-year-${i}`);
+      const desc = val(`edu-desc-${i}`);
+      if (degree || school || year || desc) {
+        list.push({ degree, school, year, desc });
+      }
     }
   }
   return list;
@@ -379,24 +403,28 @@ function getProjectData() {
   const cards = document.querySelectorAll('#projects-entries .entry-card');
   const list = [];
   if (cards.length > 0) {
-    cards.forEach((card, idx) => {
-      list.push({
-        title: card.querySelector('input[id^="proj-title-"]')?.value.trim() || `Project #${idx + 1}`,
-        role: card.querySelector('input[id^="proj-role-"]')?.value.trim() || '',
-        link: card.querySelector('input[id^="proj-link-"]')?.value.trim() || '',
-        tech: card.querySelector('input[id^="proj-tech-"]')?.value.trim() || '',
-        desc: card.querySelector('textarea[id^="proj-desc-"]')?.value.trim() || '',
-      });
+    cards.forEach((card) => {
+      const title = card.querySelector('input[id^="proj-title-"]')?.value.trim() || '';
+      const role = card.querySelector('input[id^="proj-role-"]')?.value.trim() || '';
+      const link = card.querySelector('input[id^="proj-link-"]')?.value.trim() || '';
+      const github = card.querySelector('input[id^="proj-github-"]')?.value.trim() || '';
+      const tech = card.querySelector('input[id^="proj-tech-"]')?.value.trim() || '';
+      const desc = card.querySelector('textarea[id^="proj-desc-"]')?.value.trim() || '';
+      if (title || role || link || github || tech || desc) {
+        list.push({ title, role, link, github, tech, desc });
+      }
     });
   } else {
     for (let i = 0; i < state.projectsCount; i++) {
-      list.push({
-        title: val(`proj-title-${i}`) || 'Project Title',
-        role: val(`proj-role-${i}`) || '',
-        link: val(`proj-link-${i}`) || '',
-        tech: val(`proj-tech-${i}`) || '',
-        desc: val(`proj-desc-${i}`) || '',
-      });
+      const title = val(`proj-title-${i}`);
+      const role = val(`proj-role-${i}`);
+      const link = val(`proj-link-${i}`);
+      const github = val(`proj-github-${i}`);
+      const tech = val(`proj-tech-${i}`);
+      const desc = val(`proj-desc-${i}`);
+      if (title || role || link || github || tech || desc) {
+        list.push({ title, role, link, github, tech, desc });
+      }
     }
   }
   return list;
@@ -406,52 +434,155 @@ function getCertificationData() {
   const cards = document.querySelectorAll('#certifications-entries .entry-card');
   const list = [];
   if (cards.length > 0) {
-    cards.forEach((card, idx) => {
-      const name = card.querySelector('input[id^="cert-name-"]')?.value.trim() || `Certification #${idx + 1}`;
+    cards.forEach((card) => {
+      const name = card.querySelector('input[id^="cert-name-"]')?.value.trim() || '';
       const issuer = card.querySelector('input[id^="cert-issuer-"]')?.value.trim() || '';
       const date = card.querySelector('input[id^="cert-date-"]')?.value.trim() || '';
-      list.push({ name, issuer, date });
+      const id = card.querySelector('input[id^="cert-id-"]')?.value.trim() || '';
+      if (name || issuer || date || id) {
+        list.push({ name, issuer, date, id });
+      }
     });
   } else {
     for (let i = 0; i < state.certificationsCount; i++) {
       const name = val(`cert-name-${i}`);
       const issuer = val(`cert-issuer-${i}`);
       const date = val(`cert-date-${i}`);
-      if (name || issuer) {
-        list.push({ name: name || 'Certification', issuer, date });
+      const id = val(`cert-id-${i}`);
+      if (name || issuer || date || id) {
+        list.push({ name, issuer, date, id });
       }
     }
   }
   return list;
 }
 
-// -------------------------------------------------------------
-// 1. MODERN TEMPLATE UPDATER
-// -------------------------------------------------------------
-function updateModernTemplate() {
-  const fullName = val('fullName') || 'Mukesh Ambani';
-  const jobTitle = val('jobTitle') || 'Managing Director & Chairman';
-  const email = val('email') || 'mukesh.ambani@example.com';
-  const phone = val('phone') || '+91 8103013690';
-  const location = val('location') || 'Mumbai';
-  const linkedIn = val('linkedIn') || 'linkedin.com/in/Mukeshambani';
-  const github = val('github') || 'github.com/mukeshambani';
-  const portfolio = val('portfolio') || 'mukeshambani.dev';
-  const summary = val('summary') || 'Visionary business leader and industrialist with decades of experience driving global scale, digital transformation, and sustainable infrastructure.';
+// =============================================================
+//  A-4 MULTI-PAGE DISTRIBUTION ALGORITHM
+//  Distributes sections and entries across Page 1 and Page 2
+//  Every page is strictly A-4 size (595px x 842px).
+// =============================================================
+function distributeResumeContent() {
+  const exp = getExperienceData();
+  const edu = getEducationData();
+  const proj = getProjectData();
+  const cert = getCertificationData();
+  const summary = val('summary');
 
-  // Avatar initial
-  setText('tpl-m-avatar', fullName.charAt(0).toUpperCase() || 'M');
-  setText('tpl-m-name', fullName);
-  setText('tpl-m-title', jobTitle);
+  // Page 1 budget in pixels for body content (total 842px minus top/bottom padding & headers)
+  const p1Budget = 680;
+  let currentUsage = 80; // Header footprint
+
+  if (summary) {
+    currentUsage += Math.max(48, Math.ceil(summary.length / 65) * 16 + 28);
+  }
+
+  const expP1 = [];
+  const expP2 = [];
+  exp.forEach((item) => {
+    let itemH = 52;
+    if (item.desc) itemH += Math.ceil(item.desc.length / 58) * 16;
+    if (expP2.length === 0 && currentUsage + itemH <= p1Budget) {
+      expP1.push(item);
+      currentUsage += itemH;
+    } else {
+      expP2.push(item);
+    }
+  });
+
+  const eduP1 = [];
+  const eduP2 = [];
+  edu.forEach((item) => {
+    let itemH = 46;
+    if (item.desc) itemH += Math.ceil(item.desc.length / 58) * 16;
+    if (expP2.length === 0 && eduP2.length === 0 && currentUsage + itemH <= p1Budget) {
+      eduP1.push(item);
+      currentUsage += itemH;
+    } else {
+      eduP2.push(item);
+    }
+  });
+
+  const projP1 = [];
+  const projP2 = [];
+  proj.forEach((item) => {
+    let itemH = 50;
+    if (item.desc) itemH += Math.ceil(item.desc.length / 58) * 16;
+    if (expP2.length === 0 && eduP2.length === 0 && projP2.length === 0 && currentUsage + itemH <= p1Budget) {
+      projP1.push(item);
+      currentUsage += itemH;
+    } else {
+      projP2.push(item);
+    }
+  });
+
+  const certP1 = [];
+  const certP2 = [];
+  cert.forEach((item) => {
+    let itemH = 36;
+    if (expP2.length === 0 && eduP2.length === 0 && projP2.length === 0 && certP2.length === 0 && currentUsage + itemH <= p1Budget) {
+      certP1.push(item);
+      currentUsage += itemH;
+    } else {
+      certP2.push(item);
+    }
+  });
+
+  const isTwoPages = (expP2.length > 0 || eduP2.length > 0 || projP2.length > 0 || certP2.length > 0);
+
+  return {
+    expP1, expP2,
+    eduP1, eduP2,
+    projP1, projP2,
+    certP1, certP2,
+    isTwoPages
+  };
+}
+
+// -------------------------------------------------------------
+// 1. MODERN TEMPLATE UPDATER (Multi-Page A-4 Layout)
+// -------------------------------------------------------------
+function updateModernTemplate(dist) {
+  if (!dist) dist = distributeResumeContent();
+  const fullName = val('fullName');
+  const jobTitle = val('jobTitle');
+  const email = val('email');
+  const phone = val('phone');
+  const location = val('location');
+  const linkedIn = val('linkedIn');
+  const github = val('github');
+  const portfolio = val('portfolio');
+  const summary = val('summary');
+
+  // Page 1 Header & Avatar
+  const initial = fullName ? fullName.trim().charAt(0).toUpperCase() : '·';
+  setText('tpl-m-avatar', initial);
+  setText('tpl-m-name', fullName || 'Your Name');
+  setText('tpl-m-title', jobTitle || 'Professional Title');
+  
+  // Summary section
+  setSecVisible('tpl-m-summary-sec', Boolean(summary));
   setText('tpl-m-summary', summary);
 
   // Contacts
-  setText('tpl-m-email', email);
-  setText('tpl-m-phone', phone);
-  setText('tpl-m-location', location);
-  setText('tpl-m-linkedin', linkedIn);
-  setText('tpl-m-github', github);
-  setText('tpl-m-portfolio', portfolio);
+  const setContact = (id, text) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (text) {
+      el.style.display = '';
+      el.textContent = text;
+    } else {
+      el.style.display = 'none';
+      el.textContent = '';
+    }
+  };
+
+  setContact('tpl-m-email', email);
+  setContact('tpl-m-phone', phone);
+  setContact('tpl-m-location', location);
+  setContact('tpl-m-linkedin', linkedIn);
+  setContact('tpl-m-github', github);
+  setContact('tpl-m-portfolio', portfolio);
 
   // Skills
   const skillsEl = document.getElementById('tpl-m-skills');
@@ -460,101 +591,153 @@ function updateModernTemplate() {
       ? state.skills
           .map((s) => `<span class="live-m-skill-pill">${escapeHtml(s)}</span>`)
           .join('')
-      : '<span class="live-m-skill-pill">Add skills</span>';
+      : '<span class="live-m-skill-pill" style="opacity:0.6">No skills added</span>';
   }
 
-  // Experiences
-  renderModernExperiences('tpl-m-exp-entries');
+  // Page 1 Entries
+  renderModernEntries('tpl-m-exp-entries-p1', dist.expP1, 'exp');
+  setSecVisible('tpl-m-exp-sec-p1', dist.expP1.length > 0);
 
-  // Education
-  renderModernEducations('tpl-m-edu-entries');
+  renderModernEntries('tpl-m-edu-entries-p1', dist.eduP1, 'edu');
+  setSecVisible('tpl-m-edu-sec-p1', dist.eduP1.length > 0);
 
-  // Projects
-  renderModernProjects('tpl-m-proj-entries');
+  renderModernEntries('tpl-m-proj-entries-p1', dist.projP1, 'proj');
+  setSecVisible('tpl-m-proj-sec-p1', dist.projP1.length > 0);
 
-  // Certifications
-  renderModernCertifications('tpl-m-cert-entries');
-  renderModernCertifications('tpl-m-cert-body-entries');
+  renderModernEntries('tpl-m-cert-entries-p1', dist.certP1, 'cert');
+  renderModernEntries('tpl-m-cert-body-entries-p1', dist.certP1, 'cert');
+  setSecVisible('tpl-m-cert-section-p1', dist.certP1.length > 0);
+  setSecVisible('tpl-m-cert-body-sec-p1', dist.certP1.length > 0);
+
+  // Page 2 & Divider Handling
+  const p2 = document.getElementById('tpl-m-page-2');
+  const pBreak = document.getElementById('tpl-m-page-break');
+  const f1 = document.getElementById('tpl-m-footer-p1');
+
+  if (dist.isTwoPages) {
+    if (p2) p2.style.display = 'flex';
+    if (pBreak) pBreak.classList.add('active');
+    if (f1) f1.innerHTML = 'Page 1 of 2';
+
+    // Page 2 Header & Side Name
+    setText('tpl-m-avatar-p2', initial);
+    setText('tpl-m-name-side-p2', fullName || 'Your Name');
+    setText('tpl-m-name-p2', fullName || 'Your Name');
+
+    // Page 2 Entries
+    renderModernEntries('tpl-m-exp-entries-p2', dist.expP2, 'exp');
+    setSecVisible('tpl-m-exp-sec-p2', dist.expP2.length > 0);
+
+    renderModernEntries('tpl-m-edu-entries-p2', dist.eduP2, 'edu');
+    setSecVisible('tpl-m-edu-sec-p2', dist.eduP2.length > 0);
+
+    renderModernEntries('tpl-m-proj-entries-p2', dist.projP2, 'proj');
+    setSecVisible('tpl-m-proj-sec-p2', dist.projP2.length > 0);
+
+    renderModernEntries('tpl-m-cert-entries-p2', dist.certP2, 'cert');
+    renderModernEntries('tpl-m-cert-body-entries-p2', dist.certP2, 'cert');
+    setSecVisible('tpl-m-cert-section-p2', dist.certP2.length > 0);
+    setSecVisible('tpl-m-cert-body-sec-p2', dist.certP2.length > 0);
+  } else {
+    if (p2) p2.style.display = 'none';
+    if (pBreak) pBreak.classList.remove('active');
+    if (f1) f1.innerHTML = 'Page 1 of 1';
+  }
 }
 
-function renderModernExperiences(containerId) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-  const list = getExperienceData();
-  container.innerHTML = list.map((exp) => `
-    <div class="live-m-entry">
-      <div class="live-m-entry-head">
-        <span>${escapeHtml(exp.title)}</span>
-        <span class="live-m-entry-date">${escapeHtml(exp.start)} – ${escapeHtml(exp.end)}</span>
-      </div>
-      <div class="live-m-entry-sub">${escapeHtml([exp.company, exp.location].filter(Boolean).join(' · '))}</div>
-      ${exp.desc ? `<div class="live-m-entry-desc">${escapeHtml(exp.desc)}</div>` : ''}
-    </div>`).join('');
+function setSecVisible(id, visible) {
+  const el = document.getElementById(id);
+  if (el) el.style.display = visible ? '' : 'none';
 }
 
-function renderModernEducations(containerId) {
+function renderModernEntries(containerId, list, type) {
   const container = document.getElementById(containerId);
   if (!container) return;
-  const list = getEducationData();
-  container.innerHTML = list.map((edu) => `
-    <div class="live-m-entry">
-      <div class="live-m-entry-head">
-        <span>${escapeHtml(edu.degree)}</span>
-        ${edu.year ? `<span class="live-m-entry-date">${escapeHtml(edu.year)}</span>` : ''}
-      </div>
-      <div class="live-m-entry-sub">${escapeHtml(edu.school)}</div>
-      ${edu.desc ? `<div class="live-m-entry-desc">${escapeHtml(edu.desc)}</div>` : ''}
-    </div>`).join('');
-}
-
-function renderModernProjects(containerId) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-  const list = getProjectData();
-  container.innerHTML = list.map((p) => `
-    <div class="live-m-entry">
-      <div class="live-m-entry-head">
-        <span>${escapeHtml(p.title)}${p.role ? ` <small style="color:#64748b">(${escapeHtml(p.role)})</small>` : ''}</span>
-        ${p.link ? `<a href="${escapeHtml(p.link)}" target="_blank" style="font-size:0.68rem;color:#0d9488">Link ↗</a>` : ''}
-      </div>
-      ${p.tech ? `<div class="live-m-entry-sub" style="font-size:0.7rem;color:#475569">Stack: ${escapeHtml(p.tech)}</div>` : ''}
-      ${p.desc ? `<div class="live-m-entry-desc">${escapeHtml(p.desc)}</div>` : ''}
-    </div>`).join('');
-}
-
-function renderModernCertifications(containerId) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-  const list = getCertificationData();
-  container.innerHTML = list.map((c) => `
-    <div class="live-m-entry">
-      <div class="live-m-entry-head">
-        <span>${escapeHtml(c.name)}</span>
-        ${c.date ? `<span class="live-m-entry-date">${escapeHtml(c.date)}</span>` : ''}
-      </div>
-      ${c.issuer ? `<div class="live-m-entry-sub">${escapeHtml(c.issuer)}</div>` : ''}
-    </div>`).join('');
+  if (!list || list.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+  if (type === 'exp') {
+    container.innerHTML = list.map((exp) => {
+      const dates = [exp.start, exp.end].filter(Boolean).join(' – ');
+      const sub = [exp.company, exp.location].filter(Boolean).join(' · ');
+      return `
+      <div class="live-m-entry">
+        <div class="live-m-entry-head">
+          <span>${escapeHtml(exp.title || exp.company || 'Experience')}</span>
+          ${dates ? `<span class="live-m-entry-date">${escapeHtml(dates)}</span>` : ''}
+        </div>
+        ${sub ? `<div class="live-m-entry-sub">${escapeHtml(sub)}</div>` : ''}
+        ${exp.desc ? `<div class="live-m-entry-desc">${escapeHtml(exp.desc)}</div>` : ''}
+      </div>`;
+    }).join('');
+  } else if (type === 'edu') {
+    container.innerHTML = list.map((edu) => `
+      <div class="live-m-entry">
+        <div class="live-m-entry-head">
+          <span>${escapeHtml(edu.degree || edu.school || 'Education')}</span>
+          ${edu.year ? `<span class="live-m-entry-date">${escapeHtml(edu.year)}</span>` : ''}
+        </div>
+        ${edu.school ? `<div class="live-m-entry-sub">${escapeHtml(edu.school)}</div>` : ''}
+        ${edu.desc ? `<div class="live-m-entry-desc">${escapeHtml(edu.desc)}</div>` : ''}
+      </div>`).join('');
+  } else if (type === 'proj') {
+    container.innerHTML = list.map((p) => {
+      const links = [];
+      if (p.link) {
+        const href = p.link.startsWith('http') ? p.link : `https://${p.link}`;
+        links.push(`<a href="${escapeHtml(href)}" target="_blank" style="font-size:0.68rem;color:#0d9488;font-weight:600;">Demo ↗</a>`);
+      }
+      if (p.github) {
+        const href = p.github.startsWith('http') ? p.github : `https://${p.github}`;
+        links.push(`<a href="${escapeHtml(href)}" target="_blank" style="font-size:0.68rem;color:#0d9488;font-weight:600;">GitHub ↗</a>`);
+      }
+      return `
+      <div class="live-m-entry">
+        <div class="live-m-entry-head">
+          <span>${escapeHtml(p.title || 'Project')}${p.role ? ` <small style="color:#64748b">(${escapeHtml(p.role)})</small>` : ''}</span>
+          ${links.length ? `<div>${links.join(' <span style="color:#94a3b8">·</span> ')}</div>` : ''}
+        </div>
+        ${p.tech ? `<div class="live-m-entry-sub" style="font-size:0.7rem;color:#475569">Stack: ${escapeHtml(p.tech)}</div>` : ''}
+        ${p.desc ? `<div class="live-m-entry-desc">${escapeHtml(p.desc)}</div>` : ''}
+      </div>`;
+    }).join('');
+  } else if (type === 'cert') {
+    container.innerHTML = list.map((c) => {
+      const sub = [c.issuer, c.id ? `ID: ${c.id}` : ''].filter(Boolean).join(' · ');
+      return `
+      <div class="live-m-entry">
+        <div class="live-m-entry-head">
+          <span>${escapeHtml(c.name || 'Certification')}</span>
+          ${c.date ? `<span class="live-m-entry-date">${escapeHtml(c.date)}</span>` : ''}
+        </div>
+        ${sub ? `<div class="live-m-entry-sub">${escapeHtml(sub)}</div>` : ''}
+      </div>`;
+    }).join('');
+  }
 }
 
 // -------------------------------------------------------------
-// 2. MINIMAL TEMPLATE UPDATER (ATS-Friendly / Elegant Monochrome)
+// 2. MINIMAL TEMPLATE UPDATER (Multi-Page A-4 Layout)
 // -------------------------------------------------------------
-function updateMinimalTemplate() {
-  const fullName = val('fullName') || 'Mukesh Ambani';
-  const jobTitle = val('jobTitle') || 'Managing Director & Chairman';
-  const email = val('email') || 'mukesh.ambani@example.com';
-  const phone = val('phone') || '+91 8103013690';
-  const location = val('location') || 'Mumbai';
-  const linkedIn = val('linkedIn') || 'linkedin.com/in/Mukeshambani';
-  const github = val('github') || 'github.com/mukeshambani';
-  const portfolio = val('portfolio') || 'mukeshambani.dev';
-  const summary = val('summary') || 'Visionary business leader and industrialist with decades of experience driving global scale, digital transformation, and sustainable infrastructure.';
+function updateMinimalTemplate(dist) {
+  if (!dist) dist = distributeResumeContent();
+  const fullName = val('fullName');
+  const jobTitle = val('jobTitle');
+  const email = val('email');
+  const phone = val('phone');
+  const location = val('location');
+  const linkedIn = val('linkedIn');
+  const github = val('github');
+  const portfolio = val('portfolio');
+  const summary = val('summary');
 
-  setText('tpl-mn-name', fullName);
-  setText('tpl-mn-title', jobTitle);
+  setText('tpl-mn-name', fullName || 'Your Name');
+  setText('tpl-mn-title', jobTitle || 'Professional Title');
   setText('tpl-mn-summary', summary);
+  setSecVisible('tpl-mn-summary-sec', Boolean(summary));
 
-  // Contacts with clean clickable links & separators
+  // Contacts
   const contactsEl = document.getElementById('tpl-mn-contacts');
   if (contactsEl) {
     const items = [];
@@ -574,98 +757,146 @@ function updateMinimalTemplate() {
       items.push(`<a href="${escapeHtml(href)}" target="_blank">${escapeHtml(github.replace(/^https?:\/\//, ''))}</a>`);
     }
     contactsEl.innerHTML = items.join(' <span class="mn-sep">•</span> ');
+    contactsEl.style.display = items.length > 0 ? '' : 'none';
   }
 
-  // Skills
-  const skillsEl = document.getElementById('tpl-mn-skills');
-  if (skillsEl) {
-    skillsEl.innerHTML = state.skills.length
+  // Skills on Page 1
+  const skillsElP1 = document.getElementById('tpl-mn-skills-p1');
+  if (skillsElP1) {
+    skillsElP1.innerHTML = state.skills.length
       ? state.skills.map((s) => `<span class="live-mn-skill-item">${escapeHtml(s)}</span>`).join(' <span class="mn-sep">•</span> ')
       : '—';
   }
+  setSecVisible('tpl-mn-skills-sec-p1', state.skills.length > 0);
 
-  renderMinimalExperiences('tpl-mn-exp-entries');
-  renderMinimalEducations('tpl-mn-edu-entries');
-  renderMinimalProjects('tpl-mn-proj-entries');
-  renderMinimalCertifications('tpl-mn-cert-entries');
+  // Page 1 Entries
+  renderMinimalEntries('tpl-mn-exp-entries-p1', dist.expP1, 'exp');
+  setSecVisible('tpl-mn-exp-sec-p1', dist.expP1.length > 0);
+
+  renderMinimalEntries('tpl-mn-edu-entries-p1', dist.eduP1, 'edu');
+  setSecVisible('tpl-mn-edu-sec-p1', dist.eduP1.length > 0);
+
+  renderMinimalEntries('tpl-mn-proj-entries-p1', dist.projP1, 'proj');
+  setSecVisible('tpl-mn-proj-sec-p1', dist.projP1.length > 0);
+
+  renderMinimalEntries('tpl-mn-cert-entries-p1', dist.certP1, 'cert');
+  setSecVisible('tpl-mn-cert-sec-p1', dist.certP1.length > 0);
+
+  // Page 2 & Divider Handling
+  const p2 = document.getElementById('tpl-mn-page-2');
+  const pBreak = document.getElementById('tpl-mn-page-break');
+  const f1 = document.getElementById('tpl-mn-footer-p1');
+
+  if (dist.isTwoPages) {
+    if (p2) p2.style.display = 'block';
+    if (pBreak) pBreak.classList.add('active');
+    if (f1) f1.innerHTML = 'Page 1 of 2';
+
+    setText('tpl-mn-name-p2', fullName || 'Your Name');
+
+    renderMinimalEntries('tpl-mn-exp-entries-p2', dist.expP2, 'exp');
+    setSecVisible('tpl-mn-exp-sec-p2', dist.expP2.length > 0);
+
+    renderMinimalEntries('tpl-mn-edu-entries-p2', dist.eduP2, 'edu');
+    setSecVisible('tpl-mn-edu-sec-p2', dist.eduP2.length > 0);
+
+    renderMinimalEntries('tpl-mn-proj-entries-p2', dist.projP2, 'proj');
+    setSecVisible('tpl-mn-proj-sec-p2', dist.projP2.length > 0);
+
+    renderMinimalEntries('tpl-mn-cert-entries-p2', dist.certP2, 'cert');
+    setSecVisible('tpl-mn-cert-sec-p2', dist.certP2.length > 0);
+  } else {
+    if (p2) p2.style.display = 'none';
+    if (pBreak) pBreak.classList.remove('active');
+    if (f1) f1.innerHTML = 'Page 1 of 1';
+  }
 }
 
-function renderMinimalExperiences(containerId) {
+function renderMinimalEntries(containerId, list, type) {
   const container = document.getElementById(containerId);
   if (!container) return;
-  const list = getExperienceData();
-  container.innerHTML = list.map((exp) => `
-    <div class="live-mn-entry">
-      <div class="live-mn-entry-head">
-        <div><strong>${escapeHtml(exp.title)}</strong> — <span class="live-mn-company">${escapeHtml(exp.company)}</span></div>
-        <span class="live-mn-date">${escapeHtml(exp.start)} – ${escapeHtml(exp.end)}</span>
-      </div>
-      ${exp.location ? `<div class="live-mn-location">${escapeHtml(exp.location)}</div>` : ''}
-      ${exp.desc ? `<div class="live-mn-entry-desc">${escapeHtml(exp.desc)}</div>` : ''}
-    </div>`).join('');
-}
-
-function renderMinimalEducations(containerId) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-  const list = getEducationData();
-  container.innerHTML = list.map((edu) => `
-    <div class="live-mn-entry">
-      <div class="live-mn-entry-head">
-        <div><strong>${escapeHtml(edu.degree)}</strong> — <span class="live-mn-company">${escapeHtml(edu.school)}</span></div>
-        ${edu.year ? `<span class="live-mn-date">${escapeHtml(edu.year)}</span>` : ''}
-      </div>
-      ${edu.desc ? `<div class="live-mn-entry-desc">${escapeHtml(edu.desc)}</div>` : ''}
-    </div>`).join('');
-}
-
-function renderMinimalProjects(containerId) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-  const list = getProjectData();
-  container.innerHTML = list.map((p) => `
-    <div class="live-mn-entry">
-      <div class="live-mn-entry-head">
-        <div><strong>${escapeHtml(p.title)}</strong>${p.role ? ` <span style="font-weight:400;color:#64748b">(${escapeHtml(p.role)})</span>` : ''}</div>
-        ${p.link ? `<a href="${escapeHtml(p.link)}" target="_blank" style="font-size:0.71rem;color:#0f172a;text-decoration:underline;">Demo ↗</a>` : ''}
-      </div>
-      ${p.tech ? `<div class="live-mn-proj-tech">Stack: ${escapeHtml(p.tech)}</div>` : ''}
-      ${p.desc ? `<div class="live-mn-entry-desc">${escapeHtml(p.desc)}</div>` : ''}
-    </div>`).join('');
-}
-
-function renderMinimalCertifications(containerId) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-  const list = getCertificationData();
-  container.innerHTML = list.map((c) => `
-    <div class="live-mn-entry">
-      <div class="live-mn-entry-head">
-        <div><strong>${escapeHtml(c.name)}</strong> — <span class="live-mn-company">${escapeHtml(c.issuer)}</span></div>
-        ${c.date ? `<span class="live-mn-date">${escapeHtml(c.date)}</span>` : ''}
-      </div>
-    </div>`).join('');
+  if (!list || list.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+  if (type === 'exp') {
+    container.innerHTML = list.map((exp) => {
+      const dates = [exp.start, exp.end].filter(Boolean).join(' – ');
+      return `
+      <div class="live-mn-entry">
+        <div class="live-mn-entry-head">
+          <div><strong>${escapeHtml(exp.title || exp.company || 'Experience')}</strong>${exp.company ? ` — <span class="live-mn-company">${escapeHtml(exp.company)}</span>` : ''}</div>
+          ${dates ? `<span class="live-mn-date">${escapeHtml(dates)}</span>` : ''}
+        </div>
+        ${exp.location ? `<div class="live-mn-location">${escapeHtml(exp.location)}</div>` : ''}
+        ${exp.desc ? `<div class="live-mn-entry-desc">${escapeHtml(exp.desc)}</div>` : ''}
+      </div>`;
+    }).join('');
+  } else if (type === 'edu') {
+    container.innerHTML = list.map((edu) => `
+      <div class="live-mn-entry">
+        <div class="live-mn-entry-head">
+          <div><strong>${escapeHtml(edu.degree || edu.school || 'Education')}</strong>${edu.school ? ` — <span class="live-mn-company">${escapeHtml(edu.school)}</span>` : ''}</div>
+          ${edu.year ? `<span class="live-mn-date">${escapeHtml(edu.year)}</span>` : ''}
+        </div>
+        ${edu.desc ? `<div class="live-mn-entry-desc">${escapeHtml(edu.desc)}</div>` : ''}
+      </div>`).join('');
+  } else if (type === 'proj') {
+    container.innerHTML = list.map((p) => {
+      const links = [];
+      if (p.link) {
+        const href = p.link.startsWith('http') ? p.link : `https://${p.link}`;
+        links.push(`<a href="${escapeHtml(href)}" target="_blank" style="font-size:0.71rem;color:#0f172a;text-decoration:underline;font-weight:600;">Demo ↗</a>`);
+      }
+      if (p.github) {
+        const href = p.github.startsWith('http') ? p.github : `https://${p.github}`;
+        links.push(`<a href="${escapeHtml(href)}" target="_blank" style="font-size:0.71rem;color:#0f172a;text-decoration:underline;font-weight:600;">GitHub ↗</a>`);
+      }
+      return `
+      <div class="live-mn-entry">
+        <div class="live-mn-entry-head">
+          <div><strong>${escapeHtml(p.title || 'Project')}</strong>${p.role ? ` <span style="font-weight:400;color:#64748b">(${escapeHtml(p.role)})</span>` : ''}</div>
+          ${links.length ? `<div>${links.join(' ')}</div>` : ''}
+        </div>
+        ${p.tech ? `<div class="live-mn-proj-tech">Stack: ${escapeHtml(p.tech)}</div>` : ''}
+        ${p.desc ? `<div class="live-mn-entry-desc">${escapeHtml(p.desc)}</div>` : ''}
+      </div>`;
+    }).join('');
+  } else if (type === 'cert') {
+    container.innerHTML = list.map((c) => {
+      const sub = [c.issuer, c.id ? `ID: ${c.id}` : ''].filter(Boolean).join(' · ');
+      return `
+      <div class="live-mn-entry">
+        <div class="live-mn-entry-head">
+          <div><strong>${escapeHtml(c.name || 'Certification')}</strong>${sub ? ` — <span class="live-mn-company">${escapeHtml(sub)}</span>` : ''}</div>
+          ${c.date ? `<span class="live-mn-date">${escapeHtml(c.date)}</span>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+  }
 }
 
 // -------------------------------------------------------------
-// 3. CREATIVE TEMPLATE UPDATER (Vibrant Accent / Modern 2-Column Grid)
+// 3. CREATIVE TEMPLATE UPDATER (Multi-Page A-4 Layout)
 // -------------------------------------------------------------
-function updateCreativeTemplate() {
-  const fullName = val('fullName') || 'Mukesh Ambani';
-  const jobTitle = val('jobTitle') || 'Managing Director & Chairman';
-  const email = val('email') || 'mukesh.ambani@example.com';
-  const phone = val('phone') || '+91 8103013690';
-  const location = val('location') || 'Mumbai';
-  const linkedIn = val('linkedIn') || 'linkedin.com/in/Mukeshambani';
-  const github = val('github') || 'github.com/mukeshambani';
-  const portfolio = val('portfolio') || 'mukeshambani.dev';
-  const summary = val('summary') || 'Visionary business leader and industrialist with decades of experience driving global scale, digital transformation, and sustainable infrastructure.';
+function updateCreativeTemplate(dist) {
+  if (!dist) dist = distributeResumeContent();
+  const fullName = val('fullName');
+  const jobTitle = val('jobTitle');
+  const email = val('email');
+  const phone = val('phone');
+  const location = val('location');
+  const linkedIn = val('linkedIn');
+  const github = val('github');
+  const portfolio = val('portfolio');
+  const summary = val('summary');
 
-  setText('tpl-cr-name', fullName);
-  setText('tpl-cr-title', jobTitle);
+  setText('tpl-cr-name', fullName || 'Your Name');
+  setText('tpl-cr-title', jobTitle || 'Professional Title');
   setText('tpl-cr-summary', summary);
+  setSecVisible('tpl-cr-summary-sec', Boolean(summary));
 
-  // Creative Contacts with neat icons
+  // Creative Contacts
   const crContacts = document.getElementById('tpl-cr-contacts');
   if (crContacts) {
     const items = [];
@@ -685,9 +916,10 @@ function updateCreativeTemplate() {
       items.push(`<div><a href="${escapeHtml(href)}" target="_blank">🐙 ${escapeHtml(github.replace(/^https?:\/\//, ''))}</a></div>`);
     }
     crContacts.innerHTML = items.join('');
+    crContacts.style.display = items.length > 0 ? '' : 'none';
   }
 
-  // Creative Skills (Pills)
+  // Skills
   const crSkills = document.getElementById('tpl-cr-skills');
   if (crSkills) {
     crSkills.innerHTML = state.skills.length
@@ -695,65 +927,110 @@ function updateCreativeTemplate() {
       : '—';
   }
 
-  renderCreativeExperiences('tpl-cr-exp-entries');
-  renderCreativeProjects('tpl-cr-proj-entries');
-  renderCreativeEducations('tpl-cr-edu-entries');
-  renderCreativeCertifications('tpl-cr-cert-entries');
+  // Page 1 Entries
+  renderCreativeEntries('tpl-cr-exp-entries-p1', dist.expP1, 'exp');
+  setSecVisible('tpl-cr-exp-sec-p1', dist.expP1.length > 0);
+
+  renderCreativeEntries('tpl-cr-proj-entries-p1', dist.projP1, 'proj');
+  setSecVisible('tpl-cr-proj-sec-p1', dist.projP1.length > 0);
+
+  renderCreativeEntries('tpl-cr-edu-entries-p1', dist.eduP1, 'edu');
+  setSecVisible('tpl-cr-edu-sec-p1', dist.eduP1.length > 0);
+
+  renderCreativeEntries('tpl-cr-cert-entries-p1', dist.certP1, 'cert');
+  setSecVisible('tpl-cr-cert-sec-p1', dist.certP1.length > 0);
+
+  // Page 2 & Divider Handling
+  const p2 = document.getElementById('tpl-cr-page-2');
+  const pBreak = document.getElementById('tpl-cr-page-break');
+  const f1 = document.getElementById('tpl-cr-footer-p1');
+
+  if (dist.isTwoPages) {
+    if (p2) p2.style.display = 'block';
+    if (pBreak) pBreak.classList.add('active');
+    if (f1) f1.innerHTML = 'Page 1 of 2';
+
+    setText('tpl-cr-name-p2', fullName || 'Your Name');
+
+    renderCreativeEntries('tpl-cr-exp-entries-p2', dist.expP2, 'exp');
+    setSecVisible('tpl-cr-exp-sec-p2', dist.expP2.length > 0);
+
+    renderCreativeEntries('tpl-cr-proj-entries-p2', dist.projP2, 'proj');
+    setSecVisible('tpl-cr-proj-sec-p2', dist.projP2.length > 0);
+
+    renderCreativeEntries('tpl-cr-edu-entries-p2', dist.eduP2, 'edu');
+    setSecVisible('tpl-cr-edu-sec-p2', dist.eduP2.length > 0);
+
+    renderCreativeEntries('tpl-cr-cert-entries-p2', dist.certP2, 'cert');
+    setSecVisible('tpl-cr-cert-sec-p2', dist.certP2.length > 0);
+  } else {
+    if (p2) p2.style.display = 'none';
+    if (pBreak) pBreak.classList.remove('active');
+    if (f1) f1.innerHTML = 'Page 1 of 1';
+  }
 }
 
-function renderCreativeExperiences(containerId) {
+function renderCreativeEntries(containerId, list, type) {
   const container = document.getElementById(containerId);
   if (!container) return;
-  const list = getExperienceData();
-  container.innerHTML = list.map((exp) => `
-    <div class="live-cr-card">
-      <div class="live-cr-card-top">
-        <span class="live-cr-card-title">${escapeHtml(exp.title)}</span>
-        <span class="live-cr-card-badge">${escapeHtml(exp.start)} – ${escapeHtml(exp.end)}</span>
-      </div>
-      <div class="live-cr-card-sub">${escapeHtml([exp.company, exp.location].filter(Boolean).join(' · '))}</div>
-      ${exp.desc ? `<div class="live-cr-card-desc">${escapeHtml(exp.desc)}</div>` : ''}
-    </div>`).join('');
-}
-
-function renderCreativeProjects(containerId) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-  const list = getProjectData();
-  container.innerHTML = list.map((p) => `
-    <div class="live-cr-card">
-      <div class="live-cr-card-top">
-        <span class="live-cr-card-title">${escapeHtml(p.title)}${p.role ? ` <small style="font-weight:400;color:#64748b">(${escapeHtml(p.role)})</small>` : ''}</span>
-        ${p.link ? `<a href="${escapeHtml(p.link)}" target="_blank" class="live-cr-link">Demo ↗</a>` : ''}
-      </div>
-      ${p.tech ? `<div class="live-cr-card-sub" style="color:#0284c7;font-size:0.68rem;">Stack: ${escapeHtml(p.tech)}</div>` : ''}
-      ${p.desc ? `<div class="live-cr-card-desc">${escapeHtml(p.desc)}</div>` : ''}
-    </div>`).join('');
-}
-
-function renderCreativeEducations(containerId) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-  const list = getEducationData();
-  container.innerHTML = list.map((edu) => `
-    <div class="live-cr-side-item live-cr-side-edu">
-      <div class="live-cr-side-title">${escapeHtml(edu.degree)}</div>
-      <div class="live-cr-side-sub">${escapeHtml(edu.school)}</div>
-      ${edu.year ? `<div class="live-cr-side-date">${escapeHtml(edu.year)}</div>` : ''}
-      ${edu.desc ? `<div class="live-cr-card-desc" style="font-size:0.68rem;">${escapeHtml(edu.desc)}</div>` : ''}
-    </div>`).join('');
-}
-
-function renderCreativeCertifications(containerId) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-  const list = getCertificationData();
-  container.innerHTML = list.map((c) => `
-    <div class="live-cr-side-item live-cr-side-cert">
-      <div class="live-cr-side-title">${escapeHtml(c.name)}</div>
-      <div class="live-cr-side-sub">${escapeHtml(c.issuer)}</div>
-      ${c.date ? `<div class="live-cr-side-date">${escapeHtml(c.date)}</div>` : ''}
-    </div>`).join('');
+  if (!list || list.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+  if (type === 'exp') {
+    container.innerHTML = list.map((exp) => {
+      const dates = [exp.start, exp.end].filter(Boolean).join(' – ');
+      const sub = [exp.company, exp.location].filter(Boolean).join(' · ');
+      return `
+      <div class="live-cr-card">
+        <div class="live-cr-card-top">
+          <span class="live-cr-card-title">${escapeHtml(exp.title || exp.company || 'Experience')}</span>
+          ${dates ? `<span class="live-cr-card-badge">${escapeHtml(dates)}</span>` : ''}
+        </div>
+        ${sub ? `<div class="live-cr-card-sub">${escapeHtml(sub)}</div>` : ''}
+        ${exp.desc ? `<div class="live-cr-card-desc">${escapeHtml(exp.desc)}</div>` : ''}
+      </div>`;
+    }).join('');
+  } else if (type === 'proj') {
+    container.innerHTML = list.map((p) => {
+      const links = [];
+      if (p.link) {
+        const href = p.link.startsWith('http') ? p.link : `https://${p.link}`;
+        links.push(`<a href="${escapeHtml(href)}" target="_blank" class="live-cr-link">Demo ↗</a>`);
+      }
+      if (p.github) {
+        const href = p.github.startsWith('http') ? p.github : `https://${p.github}`;
+        links.push(`<a href="${escapeHtml(href)}" target="_blank" class="live-cr-link">GitHub ↗</a>`);
+      }
+      return `
+      <div class="live-cr-card">
+        <div class="live-cr-card-top">
+          <span class="live-cr-card-title">${escapeHtml(p.title || 'Project')}${p.role ? ` <small style="font-weight:400;color:#64748b">(${escapeHtml(p.role)})</small>` : ''}</span>
+          ${links.length ? `<div>${links.join(' ')}</div>` : ''}
+        </div>
+        ${p.tech ? `<div class="live-cr-card-sub" style="color:#0284c7;font-size:0.68rem;">Stack: ${escapeHtml(p.tech)}</div>` : ''}
+        ${p.desc ? `<div class="live-cr-card-desc">${escapeHtml(p.desc)}</div>` : ''}
+      </div>`;
+    }).join('');
+  } else if (type === 'edu') {
+    container.innerHTML = list.map((edu) => `
+      <div class="live-cr-side-item live-cr-side-edu">
+        <div class="live-cr-side-title">${escapeHtml(edu.degree || edu.school || 'Education')}</div>
+        ${edu.school ? `<div class="live-cr-side-sub">${escapeHtml(edu.school)}</div>` : ''}
+        ${edu.year ? `<div class="live-cr-side-date">${escapeHtml(edu.year)}</div>` : ''}
+        ${edu.desc ? `<div class="live-cr-card-desc" style="font-size:0.68rem;">${escapeHtml(edu.desc)}</div>` : ''}
+      </div>`).join('');
+  } else if (type === 'cert') {
+    container.innerHTML = list.map((c) => {
+      const sub = [c.issuer, c.id ? `ID: ${c.id}` : ''].filter(Boolean).join(' · ');
+      return `
+      <div class="live-cr-side-item live-cr-side-cert">
+        <div class="live-cr-side-title">${escapeHtml(c.name || 'Certification')}</div>
+        ${sub ? `<div class="live-cr-side-sub">${escapeHtml(sub)}</div>` : ''}
+        ${c.date ? `<div class="live-cr-side-date">${escapeHtml(c.date)}</div>` : ''}
+      </div>`;
+    }).join('');
+  }
 }
 
 // =============================================
@@ -1051,10 +1328,11 @@ function removeEntryCard(type, idx) {
 function initZoomControls() {
   document.getElementById('zoom-in-btn')?.addEventListener('click', () => setZoom(state.zoom + 0.1));
   document.getElementById('zoom-out-btn')?.addEventListener('click', () => setZoom(state.zoom - 0.1));
+  document.getElementById('zoom-level')?.addEventListener('click', () => setZoom(1.0));
 }
 
 function setZoom(level) {
-  state.zoom = Math.min(Math.max(level, 0.5), 1.4);
+  state.zoom = Math.min(Math.max(level, 0.4), 1.6);
   const sheet = document.getElementById('resume-sheet');
   const zoomEl = document.getElementById('zoom-level');
   if (sheet) sheet.style.transform = `scale(${state.zoom})`;

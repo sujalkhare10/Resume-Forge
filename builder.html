@@ -442,7 +442,7 @@
         <!-- RIGHT: LIVE RESUME PREVIEW PANEL -->
         <div class="builder-preview-card" id="resume-preview-panel">
           <div class="preview-topbar">
-            <!-- Template Selector Option with Label -->
+            <!-- Template Selector Option with Label & Page Count Indicator -->
             <div class="preview-template-selection" style="display:flex; align-items:center; gap:8px;">
               <span style="font-size:0.78rem; font-weight:600; color:#94a3b8; text-transform:uppercase; letter-spacing:0.04em;">Template:</span>
               <div class="preview-template-tabs">
@@ -450,6 +450,7 @@
                 <button type="button" class="template-tab-btn" data-template="minimal" title="Clean Minimal Layout">Minimal</button>
                 <button type="button" class="template-tab-btn" data-template="creative" title="Creative Accent Layout">Creative</button>
               </div>
+              <span class="preview-page-pill" id="page-count-badge">📄 1 Page (A4)</span>
             </div>
 
             <div class="preview-zoom-actions">
@@ -457,7 +458,7 @@
                 <span id="fullscreen-icon">⛶</span> <span id="fullscreen-text">Full Screen</span>
               </button>
               <button type="button" class="zoom-btn" id="zoom-out-btn" title="Zoom Out">−</button>
-              <span class="zoom-level-text" id="zoom-level">100%</span>
+              <span class="zoom-level-text" id="zoom-level" title="Click to reset zoom to 100%" style="cursor: pointer;">100%</span>
               <button type="button" class="zoom-btn" id="zoom-in-btn" title="Zoom In">+</button>
               <button type="button" class="btn btn-primary btn-sm" id="download-btn" style="margin-left: 6px;">
                 Download PDF
@@ -470,137 +471,283 @@
 
               <!-- 1. MODERN TEMPLATE -->
               <div class="live-template live-tpl-modern active" id="tpl-modern">
-                <div class="live-m-side">
-                  <div class="live-m-avatar" id="tpl-m-avatar">M</div>
-                  <div class="live-m-side-sec">
-                    <div class="live-m-side-title">Contact</div>
-                    <div class="live-m-contact-item" id="tpl-m-email">mukesh.ambani@example.com</div>
-                    <div class="live-m-contact-item" id="tpl-m-phone">+91 8103013690</div>
-                    <div class="live-m-contact-item" id="tpl-m-location">Mumbai</div>
-                    <div class="live-m-contact-item" id="tpl-m-linkedin"></div>
-                    <div class="live-m-contact-item" id="tpl-m-github"></div>
-                    <div class="live-m-contact-item" id="tpl-m-portfolio"></div>
+                <!-- PAGE 1 (A-4: 595px x 842px) -->
+                <div class="resume-page resume-page-1" id="tpl-m-page-1">
+                  <div class="live-m-page-inner">
+                    <div class="live-m-side">
+                      <div class="live-m-avatar" id="tpl-m-avatar">M</div>
+                      <div class="live-m-side-sec">
+                        <div class="live-m-side-title">Contact</div>
+                        <div class="live-m-contact-item" id="tpl-m-email">mukesh.ambani@example.com</div>
+                        <div class="live-m-contact-item" id="tpl-m-phone">+91 8103013690</div>
+                        <div class="live-m-contact-item" id="tpl-m-location">Mumbai</div>
+                        <div class="live-m-contact-item" id="tpl-m-linkedin"></div>
+                        <div class="live-m-contact-item" id="tpl-m-github"></div>
+                        <div class="live-m-contact-item" id="tpl-m-portfolio"></div>
+                      </div>
+                      <div class="live-m-side-sec">
+                        <div class="live-m-side-title">Skills</div>
+                        <div class="live-m-skills-wrap" id="tpl-m-skills"></div>
+                      </div>
+                      <div class="live-m-side-sec" id="tpl-m-cert-section-p1">
+                        <div class="live-m-side-title">Certifications</div>
+                        <div id="tpl-m-cert-entries-p1"></div>
+                      </div>
+                    </div>
+
+                    <div class="live-m-body">
+                      <div class="live-m-header">
+                        <h2 class="live-m-name" id="tpl-m-name">Mukesh Ambani</h2>
+                        <div class="live-m-title" id="tpl-m-title">Managing Director & Chairman</div>
+                      </div>
+                      <div class="live-m-section" id="tpl-m-summary-sec">
+                        <h4 class="live-m-section-title">Summary</h4>
+                        <p class="live-m-text" id="tpl-m-summary">Career summary here.</p>
+                      </div>
+                      <div class="live-m-section" id="tpl-m-exp-sec-p1">
+                        <h4 class="live-m-section-title">Experience</h4>
+                        <div id="tpl-m-exp-entries-p1"></div>
+                      </div>
+                      <div class="live-m-section" id="tpl-m-edu-sec-p1">
+                        <h4 class="live-m-section-title">Education</h4>
+                        <div id="tpl-m-edu-entries-p1"></div>
+                      </div>
+                      <div class="live-m-section" id="tpl-m-proj-sec-p1">
+                        <h4 class="live-m-section-title">Projects</h4>
+                        <div id="tpl-m-proj-entries-p1"></div>
+                      </div>
+                      <div class="live-m-section" id="tpl-m-cert-body-sec-p1">
+                        <h4 class="live-m-section-title">Certifications</h4>
+                        <div id="tpl-m-cert-body-entries-p1"></div>
+                      </div>
+                    </div>
                   </div>
-                  <div class="live-m-side-sec">
-                    <div class="live-m-side-title">Skills</div>
-                    <div class="live-m-skills-wrap" id="tpl-m-skills"></div>
-                  </div>
-                  <div class="live-m-side-sec">
-                    <div class="live-m-side-title">Certifications</div>
-                    <div id="tpl-m-cert-entries"></div>
-                  </div>
+                  <div class="resume-page-footer" id="tpl-m-footer-p1">Page 1 of <span class="m-total-pages">1</span></div>
                 </div>
 
-                <div class="live-m-body">
-                  <div class="live-m-header">
-                    <h2 class="live-m-name" id="tpl-m-name">Mukesh Ambani</h2>
-                    <div class="live-m-title" id="tpl-m-title">Managing Director & Chairman</div>
+                <!-- PAGE BREAK DIVIDER (Appears when 2 pages) -->
+                <div class="resume-page-break" id="tpl-m-page-break">
+                  <div class="resume-page-break-line"></div>
+                  <span class="resume-page-break-tag">📄 Page 2 · A4 (297mm)</span>
+                  <div class="resume-page-break-line"></div>
+                </div>
+
+                <!-- PAGE 2 (A-4: 595px x 842px, shown if content extends beyond Page 1) -->
+                <div class="resume-page resume-page-2" id="tpl-m-page-2" style="display:none;">
+                  <div class="live-m-page-inner">
+                    <div class="live-m-side">
+                      <div class="live-m-side-p2-head">
+                        <div class="live-m-avatar-sm" id="tpl-m-avatar-p2">M</div>
+                        <div class="live-m-side-name-p2" id="tpl-m-name-side-p2">Mukesh Ambani</div>
+                      </div>
+                      <div class="live-m-side-sec" id="tpl-m-cert-section-p2" style="display:none;">
+                        <div class="live-m-side-title">Certifications</div>
+                        <div id="tpl-m-cert-entries-p2"></div>
+                      </div>
+                    </div>
+
+                    <div class="live-m-body">
+                      <div class="live-m-page2-header">
+                        <span class="live-m-page2-name" id="tpl-m-name-p2">Mukesh Ambani</span>
+                        <span class="live-m-page2-sub">Curriculum Vitae · Page 2</span>
+                      </div>
+                      <div class="live-m-section" id="tpl-m-exp-sec-p2" style="display:none;">
+                        <h4 class="live-m-section-title">Experience (Cont.)</h4>
+                        <div id="tpl-m-exp-entries-p2"></div>
+                      </div>
+                      <div class="live-m-section" id="tpl-m-edu-sec-p2" style="display:none;">
+                        <h4 class="live-m-section-title">Education</h4>
+                        <div id="tpl-m-edu-entries-p2"></div>
+                      </div>
+                      <div class="live-m-section" id="tpl-m-proj-sec-p2" style="display:none;">
+                        <h4 class="live-m-section-title">Projects</h4>
+                        <div id="tpl-m-proj-entries-p2"></div>
+                      </div>
+                      <div class="live-m-section" id="tpl-m-cert-body-sec-p2" style="display:none;">
+                        <h4 class="live-m-section-title">Certifications</h4>
+                        <div id="tpl-m-cert-body-entries-p2"></div>
+                      </div>
+                    </div>
                   </div>
-                  <div class="live-m-section">
-                    <h4 class="live-m-section-title">Summary</h4>
-                    <p class="live-m-text" id="tpl-m-summary">Career summary here.</p>
-                  </div>
-                  <div class="live-m-section">
-                    <h4 class="live-m-section-title">Experience</h4>
-                    <div id="tpl-m-exp-entries"></div>
-                  </div>
-                  <div class="live-m-section">
-                    <h4 class="live-m-section-title">Education</h4>
-                    <div id="tpl-m-edu-entries"></div>
-                  </div>
-                  <div class="live-m-section">
-                    <h4 class="live-m-section-title">Projects</h4>
-                    <div id="tpl-m-proj-entries"></div>
-                  </div>
-                  <div class="live-m-section" id="tpl-m-cert-section-body">
-                    <h4 class="live-m-section-title">Certifications</h4>
-                    <div id="tpl-m-cert-body-entries"></div>
-                  </div>
+                  <div class="resume-page-footer">Page 2 of 2</div>
                 </div>
               </div>
 
               <!-- 2. MINIMAL TEMPLATE (Clean ATS / Elegant Monochrome) -->
               <div class="live-template live-tpl-minimal" id="tpl-minimal">
-                <div class="live-mn-header">
-                  <h2 class="live-mn-name" id="tpl-mn-name">Mukesh Ambani</h2>
-                  <div class="live-mn-title" id="tpl-mn-title">Managing Director & Chairman</div>
-                  <div class="live-mn-contacts" id="tpl-mn-contacts"></div>
+                <!-- PAGE 1 (A-4: 595px x 842px) -->
+                <div class="resume-page resume-page-1 live-mn-page" id="tpl-mn-page-1">
+                  <div class="live-mn-header">
+                    <h2 class="live-mn-name" id="tpl-mn-name">Mukesh Ambani</h2>
+                    <div class="live-mn-title" id="tpl-mn-title">Managing Director & Chairman</div>
+                    <div class="live-mn-contacts" id="tpl-mn-contacts"></div>
+                  </div>
+                  <div class="live-mn-section" id="tpl-mn-summary-sec">
+                    <h4 class="live-mn-heading">Summary</h4>
+                    <div class="live-mn-divider"></div>
+                    <p class="live-mn-text" id="tpl-mn-summary"></p>
+                  </div>
+                  <div class="live-mn-section" id="tpl-mn-exp-sec-p1">
+                    <h4 class="live-mn-heading">Experience</h4>
+                    <div class="live-mn-divider"></div>
+                    <div id="tpl-mn-exp-entries-p1"></div>
+                  </div>
+                  <div class="live-mn-section" id="tpl-mn-edu-sec-p1">
+                    <h4 class="live-mn-heading">Education</h4>
+                    <div class="live-mn-divider"></div>
+                    <div id="tpl-mn-edu-entries-p1"></div>
+                  </div>
+                  <div class="live-mn-section" id="tpl-mn-skills-sec-p1">
+                    <h4 class="live-mn-heading">Skills</h4>
+                    <div class="live-mn-divider"></div>
+                    <p class="live-mn-text" id="tpl-mn-skills-p1"></p>
+                  </div>
+                  <div class="live-mn-section" id="tpl-mn-proj-sec-p1">
+                    <h4 class="live-mn-heading">Projects</h4>
+                    <div class="live-mn-divider"></div>
+                    <div id="tpl-mn-proj-entries-p1"></div>
+                  </div>
+                  <div class="live-mn-section" id="tpl-mn-cert-sec-p1">
+                    <h4 class="live-mn-heading">Certifications</h4>
+                    <div class="live-mn-divider"></div>
+                    <div id="tpl-mn-cert-entries-p1"></div>
+                  </div>
+                  <div class="resume-page-footer" id="tpl-mn-footer-p1">Page 1 of <span class="mn-total-pages">1</span></div>
                 </div>
-                <div class="live-mn-section" id="tpl-mn-summary-sec">
-                  <h4 class="live-mn-heading">Summary</h4>
-                  <div class="live-mn-divider"></div>
-                  <p class="live-mn-text" id="tpl-mn-summary"></p>
+
+                <!-- PAGE BREAK DIVIDER -->
+                <div class="resume-page-break" id="tpl-mn-page-break">
+                  <div class="resume-page-break-line"></div>
+                  <span class="resume-page-break-tag">📄 Page 2 · A4 (297mm)</span>
+                  <div class="resume-page-break-line"></div>
                 </div>
-                <div class="live-mn-section" id="tpl-mn-exp-sec">
-                  <h4 class="live-mn-heading">Experience</h4>
-                  <div class="live-mn-divider"></div>
-                  <div id="tpl-mn-exp-entries"></div>
-                </div>
-                <div class="live-mn-section" id="tpl-mn-edu-sec">
-                  <h4 class="live-mn-heading">Education</h4>
-                  <div class="live-mn-divider"></div>
-                  <div id="tpl-mn-edu-entries"></div>
-                </div>
-                <div class="live-mn-section" id="tpl-mn-skills-sec">
-                  <h4 class="live-mn-heading">Skills</h4>
-                  <div class="live-mn-divider"></div>
-                  <p class="live-mn-text" id="tpl-mn-skills"></p>
-                </div>
-                <div class="live-mn-section" id="tpl-mn-proj-sec">
-                  <h4 class="live-mn-heading">Projects</h4>
-                  <div class="live-mn-divider"></div>
-                  <div id="tpl-mn-proj-entries"></div>
-                </div>
-                <div class="live-mn-section" id="tpl-mn-cert-sec">
-                  <h4 class="live-mn-heading">Certifications</h4>
-                  <div class="live-mn-divider"></div>
-                  <div id="tpl-mn-cert-entries"></div>
+
+                <!-- PAGE 2 (A-4: 595px x 842px) -->
+                <div class="resume-page resume-page-2 live-mn-page" id="tpl-mn-page-2" style="display:none;">
+                  <div class="live-mn-page2-header">
+                    <span class="live-mn-name" style="font-size:1.05rem;" id="tpl-mn-name-p2">Mukesh Ambani</span>
+                    <span style="font-size:0.75rem;color:#64748b;font-weight:500;">Curriculum Vitae · Page 2</span>
+                  </div>
+                  <div class="live-mn-divider" style="margin-bottom:12px;"></div>
+                  <div class="live-mn-section" id="tpl-mn-exp-sec-p2" style="display:none;">
+                    <h4 class="live-mn-heading">Experience (Cont.)</h4>
+                    <div class="live-mn-divider"></div>
+                    <div id="tpl-mn-exp-entries-p2"></div>
+                  </div>
+                  <div class="live-mn-section" id="tpl-mn-edu-sec-p2" style="display:none;">
+                    <h4 class="live-mn-heading">Education</h4>
+                    <div class="live-mn-divider"></div>
+                    <div id="tpl-mn-edu-entries-p2"></div>
+                  </div>
+                  <div class="live-mn-section" id="tpl-mn-skills-sec-p2" style="display:none;">
+                    <h4 class="live-mn-heading">Skills</h4>
+                    <div class="live-mn-divider"></div>
+                    <p class="live-mn-text" id="tpl-mn-skills-p2"></p>
+                  </div>
+                  <div class="live-mn-section" id="tpl-mn-proj-sec-p2" style="display:none;">
+                    <h4 class="live-mn-heading">Projects</h4>
+                    <div class="live-mn-divider"></div>
+                    <div id="tpl-mn-proj-entries-p2"></div>
+                  </div>
+                  <div class="live-mn-section" id="tpl-mn-cert-sec-p2" style="display:none;">
+                    <h4 class="live-mn-heading">Certifications</h4>
+                    <div class="live-mn-divider"></div>
+                    <div id="tpl-mn-cert-entries-p2"></div>
+                  </div>
+                  <div class="resume-page-footer">Page 2 of 2</div>
                 </div>
               </div>
 
               <!-- 3. CREATIVE TEMPLATE (Vibrant Accent / Modern 2-Column Grid) -->
               <div class="live-template live-tpl-creative" id="tpl-creative">
-                <div class="live-cr-bar"></div>
-                <div class="live-cr-inner">
-                  <div class="live-cr-header">
-                    <div class="live-cr-header-left">
-                      <h2 class="live-cr-name" id="tpl-cr-name">Mukesh Ambani</h2>
-                      <div class="live-cr-title" id="tpl-cr-title">Managing Director & Chairman</div>
-                    </div>
-                    <div class="live-cr-contacts" id="tpl-cr-contacts"></div>
-                  </div>
-
-                  <div class="live-cr-summary-card" id="tpl-cr-summary-card">
-                    <p class="live-cr-summary-text" id="tpl-cr-summary"></p>
-                  </div>
-
-                  <div class="live-cr-grid">
-                    <div class="live-cr-col-main">
-                      <div class="live-cr-section" id="tpl-cr-exp-sec">
-                        <h4 class="live-cr-section-title" style="color:#0284c7;">💼 Work Experience</h4>
-                        <div id="tpl-cr-exp-entries"></div>
+                <!-- PAGE 1 (A-4: 595px x 842px) -->
+                <div class="resume-page resume-page-1 live-cr-page" id="tpl-cr-page-1">
+                  <div class="live-cr-bar"></div>
+                  <div class="live-cr-inner">
+                    <div class="live-cr-header">
+                      <div class="live-cr-header-left">
+                        <h2 class="live-cr-name" id="tpl-cr-name">Mukesh Ambani</h2>
+                        <div class="live-cr-title" id="tpl-cr-title">Managing Director & Chairman</div>
                       </div>
-                      <div class="live-cr-section" id="tpl-cr-proj-sec">
-                        <h4 class="live-cr-section-title" style="color:#0284c7;">🚀 Featured Projects</h4>
-                        <div id="tpl-cr-proj-entries"></div>
-                      </div>
+                      <div class="live-cr-contacts" id="tpl-cr-contacts"></div>
                     </div>
 
-                    <div class="live-cr-col-side">
-                      <div class="live-cr-section" id="tpl-cr-skills-sec">
-                        <h4 class="live-cr-section-title" style="color:#db2777;">⚡ Core Skills</h4>
-                        <div class="live-cr-skills-wrap" id="tpl-cr-skills"></div>
+                    <div class="live-cr-summary-card" id="tpl-cr-summary-card">
+                      <p class="live-cr-summary-text" id="tpl-cr-summary"></p>
+                    </div>
+
+                    <div class="live-cr-grid">
+                      <div class="live-cr-col-main">
+                        <div class="live-cr-section" id="tpl-cr-exp-sec-p1">
+                          <h4 class="live-cr-section-title" style="color:#0284c7;">💼 Work Experience</h4>
+                          <div id="tpl-cr-exp-entries-p1"></div>
+                        </div>
+                        <div class="live-cr-section" id="tpl-cr-proj-sec-p1">
+                          <h4 class="live-cr-section-title" style="color:#0284c7;">🚀 Featured Projects</h4>
+                          <div id="tpl-cr-proj-entries-p1"></div>
+                        </div>
                       </div>
-                      <div class="live-cr-section" id="tpl-cr-edu-sec">
-                        <h4 class="live-cr-section-title" style="color:#7c3aed;">🎓 Education</h4>
-                        <div id="tpl-cr-edu-entries"></div>
-                      </div>
-                      <div class="live-cr-section" id="tpl-cr-cert-sec">
-                        <h4 class="live-cr-section-title" style="color:#d97706;">🏆 Certifications</h4>
-                        <div id="tpl-cr-cert-entries"></div>
+
+                      <div class="live-cr-col-side">
+                        <div class="live-cr-section" id="tpl-cr-skills-sec">
+                          <h4 class="live-cr-section-title" style="color:#db2777;">⚡ Core Skills</h4>
+                          <div class="live-cr-skills-wrap" id="tpl-cr-skills"></div>
+                        </div>
+                        <div class="live-cr-section" id="tpl-cr-edu-sec-p1">
+                          <h4 class="live-cr-section-title" style="color:#7c3aed;">🎓 Education</h4>
+                          <div id="tpl-cr-edu-entries-p1"></div>
+                        </div>
+                        <div class="live-cr-section" id="tpl-cr-cert-sec-p1">
+                          <h4 class="live-cr-section-title" style="color:#d97706;">🏆 Certifications</h4>
+                          <div id="tpl-cr-cert-entries-p1"></div>
+                        </div>
                       </div>
                     </div>
                   </div>
+                  <div class="resume-page-footer" id="tpl-cr-footer-p1">Page 1 of <span class="cr-total-pages">1</span></div>
+                </div>
+
+                <!-- PAGE BREAK DIVIDER -->
+                <div class="resume-page-break" id="tpl-cr-page-break">
+                  <div class="resume-page-break-line"></div>
+                  <span class="resume-page-break-tag">📄 Page 2 · A4 (297mm)</span>
+                  <div class="resume-page-break-line"></div>
+                </div>
+
+                <!-- PAGE 2 (A-4: 595px x 842px) -->
+                <div class="resume-page resume-page-2 live-cr-page" id="tpl-cr-page-2" style="display:none;">
+                  <div class="live-cr-bar"></div>
+                  <div class="live-cr-inner">
+                    <div class="live-cr-page2-header">
+                      <span class="live-cr-name" style="font-size:1.15rem;" id="tpl-cr-name-p2">Mukesh Ambani</span>
+                      <span class="live-cr-page2-badge">Page 2 · A4</span>
+                    </div>
+
+                    <div class="live-cr-grid">
+                      <div class="live-cr-col-main">
+                        <div class="live-cr-section" id="tpl-cr-exp-sec-p2" style="display:none;">
+                          <h4 class="live-cr-section-title" style="color:#0284c7;">💼 Experience (Cont.)</h4>
+                          <div id="tpl-cr-exp-entries-p2"></div>
+                        </div>
+                        <div class="live-cr-section" id="tpl-cr-proj-sec-p2" style="display:none;">
+                          <h4 class="live-cr-section-title" style="color:#0284c7;">🚀 Featured Projects</h4>
+                          <div id="tpl-cr-proj-entries-p2"></div>
+                        </div>
+                      </div>
+
+                      <div class="live-cr-col-side">
+                        <div class="live-cr-section" id="tpl-cr-edu-sec-p2" style="display:none;">
+                          <h4 class="live-cr-section-title" style="color:#7c3aed;">🎓 Education</h4>
+                          <div id="tpl-cr-edu-entries-p2"></div>
+                        </div>
+                        <div class="live-cr-section" id="tpl-cr-cert-sec-p2" style="display:none;">
+                          <h4 class="live-cr-section-title" style="color:#d97706;">🏆 Certifications</h4>
+                          <div id="tpl-cr-cert-entries-p2"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="resume-page-footer">Page 2 of 2</div>
                 </div>
               </div>
 
@@ -622,7 +769,7 @@
         <div class="logo-icon" style="width:28px;height:28px;font-size:0.9rem;">⚡</div>
         <span>ResumeForge</span>
       </div>
-      <p class="footer-copy">© 2026 ResumeForge &nbsp;·&nbsp; Built with ❤️ &nbsp;·&nbsp; Day 2 of 10</p>
+
       <div class="footer-links">
         <a href="index.html" class="footer-link">Home</a>
         <a href="index.html#templates" class="footer-link">Templates</a>
