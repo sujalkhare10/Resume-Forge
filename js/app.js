@@ -5,6 +5,8 @@
 
 'use strict';
 
+import { AuthService } from './auth.js';
+
 // =============================================
 //  STATE
 // =============================================
@@ -116,6 +118,7 @@ const SAMPLE_DATA = {
 document.addEventListener('DOMContentLoaded', () => {
   initNavbar();
   initTheme();
+  AuthService.init();
   initTabs();
   initSkills();
   initZoomControls();
@@ -1496,12 +1499,87 @@ function populateFormWithData(data) {
 }
 
 // =============================================
-//  DOWNLOAD / PRINT
+//  DOWNLOAD / PDF EXPORT
 // =============================================
+let printState = {
+  originalTitle: '',
+  wasShowingForm: false,
+  originalTransform: '',
+};
+
+function prepareForPrint() {
+  // 1. Ensure preview is freshly rendered from all form fields
+  if (typeof updatePreview === 'function') {
+    updatePreview();
+  }
+
+  // 2. Set dynamic title so the saved PDF defaults to "Candidate_Name_Resume.pdf"
+  printState.originalTitle = document.title;
+  const nameInput = document.getElementById('fullName');
+  const candidateName = nameInput?.value?.trim() || 'Resume';
+  const cleanName = candidateName.replace(/[^a-zA-Z0-9_\-\s]/g, '').trim().replace(/\s+/g, '_');
+  document.title = cleanName ? `${cleanName}_Resume` : 'Resume';
+
+  // 3. Reset zoom scaling so it prints at exact 1:1 A4 dimensions
+  const sheet = document.getElementById('resume-sheet');
+  if (sheet) {
+    printState.originalTransform = sheet.style.transform;
+    sheet.style.transform = 'none';
+  }
+
+  // 4. On mobile/tablet or dual-pane, ensure preview card is visible
+  const workspace = document.getElementById('builder-workspace');
+  if (workspace) {
+    printState.wasShowingForm = workspace.classList.contains('show-form');
+    workspace.classList.remove('show-form');
+    workspace.classList.add('show-preview');
+  }
+
+  document.body.classList.add('printing-active');
+}
+
+function cleanupAfterPrint() {
+  document.body.classList.remove('printing-active');
+
+  // Restore document title
+  if (printState.originalTitle) {
+    document.title = printState.originalTitle;
+  }
+
+  // Restore zoom transform
+  const sheet = document.getElementById('resume-sheet');
+  if (sheet && printState.originalTransform !== undefined) {
+    sheet.style.transform = printState.originalTransform;
+  }
+
+  // Restore mobile view mode if it was showing the form
+  const workspace = document.getElementById('builder-workspace');
+  if (workspace && printState.wasShowingForm) {
+    workspace.classList.add('show-form');
+    workspace.classList.remove('show-preview');
+  }
+}
+
+export function downloadResume() {
+  prepareForPrint();
+  window.print();
+  // Fallback cleanup in case afterprint does not fire immediately
+  setTimeout(cleanupAfterPrint, 1200);
+}
+
 function initDownload() {
-  document.getElementById('download-btn')?.addEventListener('click', () => {
-    window.print();
+  // Global click delegate for all download/export resume buttons
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('#download-btn, #export-pdf-btn, #builder-export-btn, [data-action="download-pdf"]');
+    if (btn) {
+      e.preventDefault();
+      downloadResume();
+    }
   });
+
+  // Native print triggers (Ctrl+P, browser print menu)
+  window.addEventListener('beforeprint', prepareForPrint);
+  window.addEventListener('afterprint', cleanupAfterPrint);
 }
 
 // =============================================
